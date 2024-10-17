@@ -1,8 +1,3 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import reactLogo from "../assets/react.svg";
-import viteLogo from "/vite.svg";
-
 import {
   Card,
   CardContent,
@@ -12,14 +7,8 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  BarChart,
-  Book,
-  BookOpen,
-  FileText,
-  Trophy,
-  Users,
-} from "lucide-react";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { BarChart, Book, Trophy, Users } from "lucide-react";
 
 export default function Dashboard() {
   return (

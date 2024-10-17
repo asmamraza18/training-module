@@ -8,14 +8,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  BarChart,
-  Book,
-  BookOpen,
-  FileText,
-  Trophy,
-  Users,
-} from "lucide-react";
+import { BarChart, Book, Trophy, Users } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,

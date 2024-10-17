@@ -1,5 +1,4 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Container } from "lucide-react";
 
 export const Route = createLazyFileRoute("/about")({
   component: () => (
