@@ -4,12 +4,14 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <div className="p-2 flex gap-2">
+    <div className="flex h-screen flex-col">
+      <div className="p-2 flex gap-2 border items-center justify-center">
         <NavigationBar />
       </div>
-      <Outlet />
+      <div className="flex-1 items-center justify-center border flex">
+        <Outlet />
+      </div>
       <TanStackRouterDevtools />
-    </>
+    </div>
   ),
 });
