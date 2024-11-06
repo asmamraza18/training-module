@@ -79,7 +79,7 @@ export default function NavigationBar() {
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="/about">
+          <Link to="/login1">
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Account
             </NavigationMenuLink>
