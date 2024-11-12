@@ -48,6 +48,69 @@ const TabsContent = React.forwardRef<
     {...props}
   />
 ))
+
 TabsContent.displayName = TabsPrimitive.Content.displayName
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+///////////Login Tab////////////////
+const TabsRoot = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Root
+    ref={ref}
+    className={cn(
+      "flex-col w-80 shadow-lg",
+      className
+    )}
+    {...props}
+  />
+))
+TabsRoot.displayName = TabsPrimitive.Root.displayName
+
+const TabsList1 = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      "shrink-0 flex border-b-2 border-solid border-gray-400",
+      className
+    )}
+    {...props}
+  />
+))
+TabsList1.displayName = TabsPrimitive.List.displayName
+
+const TabsTrigger1 = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "decoration-inherit bg-white py-0 px-5 h-11 flex-1 items-center justify-center text-sm leading-3 select-none",
+      className
+    )}
+    {...props}
+  />
+))
+TabsTrigger1.displayName = TabsPrimitive.Trigger.displayName
+
+const TabsContent1 = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn(
+      "grow p-5 bg-white rounded-bl-md rounded-br-md outline-none",
+      className
+    )}
+    {...props}
+  />
+))
+
+TabsContent1.displayName = TabsPrimitive.Content.displayName
+
+export { Tabs, TabsList, TabsTrigger, TabsContent, TabsRoot, TabsList1, TabsTrigger1, TabsContent1}
