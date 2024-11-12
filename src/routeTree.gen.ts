@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TrainingImport } from './routes/training'
+import { Route as Login1Import } from './routes/login1'
 import { Route as LoginImport } from './routes/login'
 import { Route as Login1Import } from './routes/login1'
 import { Route as DashboardImport } from './routes/dashboard'
@@ -247,6 +248,7 @@ export const routeTree = rootRoute
         "/",
         "/dashboard",
         "/login",
+        "/login1",
         "/training",
         "/about",
         "/module/$moduleId"
@@ -260,6 +262,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/login1": {
+      "filePath": "login1.tsx"
     },
     "/training": {
       "filePath": "training.tsx",

@@ -48,6 +48,7 @@ const TabsContent = React.forwardRef<
     {...props}
   />
 ))
+
 TabsContent.displayName = TabsPrimitive.Content.displayName
 
 ///////////Login Tab////////////////
