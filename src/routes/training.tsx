@@ -1,13 +1,12 @@
-import data from "../trainings.json";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { ChartBarStacked } from "lucide-react";
-import db from "@/lib/db";
+import data from "../trainings.json";
 
 export const Route = createFileRoute("/training")({
   component: TrainingList,
@@ -15,8 +14,6 @@ export const Route = createFileRoute("/training")({
 
 export default function TrainingList() {
   const modules = data.modules;
-  const modules_ = db.read();
-  console.log(modules_);
 
   return (
     <div className="px-4 py-10">
@@ -26,7 +23,7 @@ export default function TrainingList() {
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {modules.map((module) => (
-            <Card className="shadow-md relative">
+            <Card className="shadow-md relative" key={module.id}>
               <div className="p-4">
                 <div className="mb-6">
                   <CardHeader>

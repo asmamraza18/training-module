@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import data from '@/trainings.json';
 import { PauseCircle, PlayCircle, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
-import data from '@/trainings.json'
 
 export const Route = createFileRoute("/module/$moduleId")({
   component: Module,
