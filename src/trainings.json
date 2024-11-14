@@ -6,7 +6,7 @@
       "description": {
         "overview": "A beginner's guide to understanding data science, its applications, and career opportunities.",
         "specificInstruction": "Focus on understanding basic concepts and terminologies used in data science.",
-        "training goals": "Develop foundational knowledge in data science and be prepared for more advanced topics."
+        "trainingGoals": "Develop foundational knowledge in data science and be prepared for more advanced topics."
       },
       "category": "Data Science",
       "course": {
@@ -25,7 +25,7 @@
       "description": {
         "overview": "An introductory course to Python programming, suitable for complete beginners.",
         "specificInstruction": "Learn the basics of Python syntax, variables, and simple data types.",
-        "training goals": "Gain the ability to write simple Python scripts and understand basic coding logic."
+        "trainingGoals": "Gain the ability to write simple Python scripts and understand basic coding logic."
       },
       "category": "Programming",
       "course": {
@@ -44,7 +44,7 @@
       "description": {
         "overview": "This course covers the basics of machine learning, algorithms, and model training.",
         "specificInstruction": "Focus on understanding the types of learning and basic algorithms.",
-        "training goals": "Gain an understanding of machine learning concepts and types of algorithms."
+        "trainingGoals": "Gain an understanding of machine learning concepts and types of algorithms."
       },
       "category": "Machine Learning",
       "course": {
@@ -63,7 +63,7 @@
       "description": {
         "overview": "An essential course on cybersecurity principles and practices for protecting data.",
         "specificInstruction": "Learn the basics of network security, encryption, and best practices.",
-        "training goals": "Understand cybersecurity fundamentals and basic protection techniques."
+        "trainingGoals": "Understand cybersecurity fundamentals and basic protection techniques."
       },
       "category": "Cybersecurity",
       "course": {
@@ -82,7 +82,7 @@
       "description": {
         "overview": "An introductory course on the key areas of digital marketing, including SEO and social media.",
         "specificInstruction": "Focus on understanding various digital marketing channels and techniques.",
-        "training goals": "Gain basic knowledge of digital marketing principles and tools."
+        "trainingGoals": "Gain basic knowledge of digital marketing principles and tools."
       },
       "category": "Marketing",
       "course": {
@@ -101,7 +101,7 @@
       "description": {
         "overview": "Learn strategies to improve time management and boost productivity.",
         "specificInstruction": "Apply time management techniques to balance workloads effectively.",
-        "training goals": "Develop effective time management habits and improve productivity."
+        "trainingGoals": "Develop effective time management habits and improve productivity."
       },
       "category": "Productivity",
       "course": {

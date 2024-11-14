@@ -9,8 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Flame, HardHat, Search, Wrench, Zap } from "lucide-react";
 import { useState } from "react";
 
@@ -43,6 +42,7 @@ const modules = [
 ];
 
 export default function ModuleSelection() {
+  const navigate = useNavigate({ from: "/module" });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedModule, setSelectedModule] = useState<number | null>(null);
 
@@ -66,37 +66,35 @@ export default function ModuleSelection() {
         />
       </div>
 
-      <ScrollArea className="h-[400px]">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredModules.map((module) => (
-            <Card
-              key={module.id}
-              className={`cursor-pointer transition-all ${selectedModule === module.id ? "ring-2 ring-primary" : ""}`}
-              onClick={() => setSelectedModule(module.id)}
-            >
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <module.icon className="h-5 w-5" />
-                  {module.title}
-                </CardTitle>
-                <CardDescription>{module.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {module.recommended && (
-                  <Badge variant="secondary" className="mb-2">
-                    Recommended
-                  </Badge>
-                )}
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Select Module
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </ScrollArea>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {filteredModules.map((module) => (
+          <Card
+            key={module.id}
+            className={`cursor-pointer transition-all ${selectedModule === module.id ? "ring-2 ring-primary" : ""}`}
+            onClick={() => setSelectedModule(module.id)}
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <module.icon className="h-5 w-5" />
+                {module.title}
+              </CardTitle>
+              <CardDescription>{module.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {module.recommended && (
+                <Badge variant="secondary" className="mb-2">
+                  Recommended
+                </Badge>
+              )}
+            </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">
+                Select Module
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
 
       <Button
         className="w-full"
@@ -106,7 +104,7 @@ export default function ModuleSelection() {
             // Navigate to the selected module
             console.log(`Navigating to module ${selectedModule}`);
             // You would typically use a router here, e.g.:
-            // router.push(`/training/module/${selectedModule}`)
+            navigate({ to: `/module/${selectedModule}` });
           }
         }}
       >
@@ -116,6 +114,6 @@ export default function ModuleSelection() {
   );
 }
 
-export const Route = createFileRoute("/training/module-selection")({
+export const Route = createFileRoute("/module/")({
   component: ModuleSelection,
 });

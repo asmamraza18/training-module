@@ -14,11 +14,10 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TrainingImport } from './routes/training'
-import { Route as Login1Import } from './routes/login1'
 import { Route as LoginImport } from './routes/login'
-import { Route as Login1Import } from './routes/login1'
 import { Route as DashboardImport } from './routes/dashboard'
-import { Route as TrainingModuleSelectionImport } from './routes/training/module-selection'
+import { Route as AuthImport } from './routes/auth'
+import { Route as ModuleIndexImport } from './routes/module/index'
 import { Route as ModuleModuleIdImport } from './routes/module/$moduleId'
 
 // Create Virtual Routes
@@ -38,11 +37,6 @@ const TrainingRoute = TrainingImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const Login1Route = Login1Import.update({
-  path: '/login1',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const LoginRoute = LoginImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
@@ -53,14 +47,19 @@ const DashboardRoute = DashboardImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthRoute = AuthImport.update({
+  path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const TrainingModuleSelectionRoute = TrainingModuleSelectionImport.update({
-  path: '/module-selection',
-  getParentRoute: () => TrainingRoute,
+const ModuleIndexRoute = ModuleIndexImport.update({
+  path: '/module/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ModuleModuleIdRoute = ModuleModuleIdImport.update({
@@ -79,6 +78,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -91,13 +97,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/login1': {
-      id: '/login1'
-      path: '/login1'
-      fullPath: '/login1'
-      preLoaderRoute: typeof Login1Import
       parentRoute: typeof rootRoute
     }
     '/training': {
@@ -121,116 +120,106 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleModuleIdImport
       parentRoute: typeof rootRoute
     }
-    '/training/module-selection': {
-      id: '/training/module-selection'
-      path: '/module-selection'
-      fullPath: '/training/module-selection'
-      preLoaderRoute: typeof TrainingModuleSelectionImport
-      parentRoute: typeof TrainingImport
+    '/module/': {
+      id: '/module/'
+      path: '/module'
+      fullPath: '/module'
+      preLoaderRoute: typeof ModuleIndexImport
+      parentRoute: typeof rootRoute
     }
   }
 }
 
 // Create and export the route tree
 
-interface TrainingRouteChildren {
-  TrainingModuleSelectionRoute: typeof TrainingModuleSelectionRoute
-}
-
-const TrainingRouteChildren: TrainingRouteChildren = {
-  TrainingModuleSelectionRoute: TrainingModuleSelectionRoute,
-}
-
-const TrainingRouteWithChildren = TrainingRoute._addFileChildren(
-  TrainingRouteChildren,
-)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/login1': typeof Login1Route
-  '/training': typeof TrainingRouteWithChildren
+  '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
-  '/training/module-selection': typeof TrainingModuleSelectionRoute
+  '/module': typeof ModuleIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/login1': typeof Login1Route
-  '/training': typeof TrainingRouteWithChildren
+  '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
-  '/training/module-selection': typeof TrainingModuleSelectionRoute
+  '/module': typeof ModuleIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/login1': typeof Login1Route
-  '/training': typeof TrainingRouteWithChildren
+  '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
-  '/training/module-selection': typeof TrainingModuleSelectionRoute
+  '/module/': typeof ModuleIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/dashboard'
     | '/login'
-    | '/login1'
     | '/training'
     | '/about'
     | '/module/$moduleId'
-    | '/training/module-selection'
+    | '/module'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/dashboard'
     | '/login'
-    | '/login1'
     | '/training'
     | '/about'
     | '/module/$moduleId'
-    | '/training/module-selection'
+    | '/module'
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/dashboard'
     | '/login'
-    | '/login1'
     | '/training'
     | '/about'
     | '/module/$moduleId'
-    | '/training/module-selection'
+    | '/module/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
-  Login1Route: typeof Login1Route
-  TrainingRoute: typeof TrainingRouteWithChildren
+  TrainingRoute: typeof TrainingRoute
   AboutLazyRoute: typeof AboutLazyRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
+  ModuleIndexRoute: typeof ModuleIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
-  Login1Route: Login1Route,
-  TrainingRoute: TrainingRouteWithChildren,
+  TrainingRoute: TrainingRoute,
   AboutLazyRoute: AboutLazyRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
+  ModuleIndexRoute: ModuleIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -246,16 +235,20 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/auth",
         "/dashboard",
         "/login",
-        "/login1",
         "/training",
         "/about",
-        "/module/$moduleId"
+        "/module/$moduleId",
+        "/module/"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/auth": {
+      "filePath": "auth.tsx"
     },
     "/dashboard": {
       "filePath": "dashboard.tsx"
@@ -263,14 +256,8 @@ export const routeTree = rootRoute
     "/login": {
       "filePath": "login.tsx"
     },
-    "/login1": {
-      "filePath": "login1.tsx"
-    },
     "/training": {
-      "filePath": "training.tsx",
-      "children": [
-        "/training/module-selection"
-      ]
+      "filePath": "training.tsx"
     },
     "/about": {
       "filePath": "about.lazy.tsx"
@@ -278,9 +265,8 @@ export const routeTree = rootRoute
     "/module/$moduleId": {
       "filePath": "module/$moduleId.tsx"
     },
-    "/training/module-selection": {
-      "filePath": "training/module-selection.tsx",
-      "parent": "/training"
+    "/module/": {
+      "filePath": "module/index.tsx"
     }
   }
 }

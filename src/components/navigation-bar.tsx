@@ -6,83 +6,35 @@ import * as React from "react";
 
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
 
 export default function NavigationBar() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <Link to="/">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Dashboard
-            </NavigationMenuLink>
+          <Link to="/" className={navigationMenuTriggerStyle()}>
+            Dashboard
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="/about">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              About
-            </NavigationMenuLink>
+          <Link to="/about" className={navigationMenuTriggerStyle()}>
+            About
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="/training">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Training
-            </NavigationMenuLink>
+          <Link to="/module" className={navigationMenuTriggerStyle()}>
+            Modules
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="/login1">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Account
-            </NavigationMenuLink>
+          <Link to="/auth" className={navigationMenuTriggerStyle()}>
+            Account
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>

@@ -8,7 +8,7 @@ export const Route = createRootRoute({
       <div className="p-2 flex gap-2 border items-center justify-center">
         <NavigationBar />
       </div>
-      <div className="flex-1 items-center justify-center border flex">
+      <div className="flex-1 justify-center border flex">
         <Outlet />
       </div>
       <TanStackRouterDevtools />
