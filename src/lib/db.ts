@@ -1,12 +1,10 @@
-import { drizzle } from "drizzle-orm/libsql/web";
+import { drizzle } from "drizzle-orm/libsql";
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 
-const db = drizzle({
+export const db = drizzle({
   connection: {
-    url: import.meta.env.PROD
-      ? import.meta.env.DATABASE_URL
-      : "http://127.0.0.1:8080",
-    authToken: import.meta.env.PROD && import.meta.env.DATABASE_AUTH_TOKEN,
+    url: "http://127.0.0.1:8080",
+    authToken: "YOUR_AUTH_TOKEN",
   },
 });
 
@@ -98,5 +96,3 @@ export const trainingProgress = sqliteTable("training_progress", {
 //   }),
 //   moduleProgress: many(moduleProgress),
 // }));
-
-export default db;

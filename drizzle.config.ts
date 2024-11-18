@@ -1,10 +1,11 @@
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
-  schema: "./src/lib/turso.ts",
+  schema: "./src/lib/db.ts",
   out: "./drizzle",
-  dialect: "sqlite",
+  dialect: "turso",
   dbCredentials: {
-    url: "file:training.db",
+    url: "http://127.0.0.1:8080",
+    authToken: "YOUR_AUTH_TOKEN",
   },
 });

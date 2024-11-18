@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d1a98d69-9f0f-422f-a9bc-913def029c7c",
+  "id": "19784ca0-3c67-480f-affd-a0541e79f19f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "module_progress": {
