@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-//import WeldingJSAInstructions from "./-WeldingJSAInstructions";
-//import ModulePage from "./-ModulePage";
+import { createFileRoute , useNavigate, Link} from "@tanstack/react-router";
+import WeldingJSAInstructions from "./-WeldingJSAInstructions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,6 +24,7 @@ function Module() {
   const [isMuted, setIsMuted] = useState(false);
   const [hasReadInstructions, setHasReadInstructions] = useState(false);
   const [hasListenedAudio, setHasListenedAudio] = useState(false);
+  const navigate = useNavigate({ from: "/module" });
 
   const modules = data.modules
   const modulebyId = modules.filter(module => module.id == moduleId)
@@ -191,12 +191,32 @@ function Module() {
             </label>
           </div>
 
-          <Button
+          <Link 
+          to="/module/$quizModuleId"
+          className={`w-full ${
+            hasReadInstructions && hasListenedAudio ? "" : "cursor-not-allowed text-gray-400"}`}
+            params={{
+              quizModuleId: module.id,
+            }}
+          >
+          Proceed to Practical Training
+          </Link>
+
+          {/* <Button
             className="w-full"
             disabled={!hasReadInstructions || !hasListenedAudio}
+            onClick={() => {
+              if (hasReadInstructions && hasListenedAudio) {
+                // Navigate to the selected module
+                console.log(`Navigating to module ${module.id}`);
+                // You would typically use a router here, e.g.:
+                navigate({ to: `/module/${module.id}` });
+              }
+            }}
           >
             Proceed to Practical Training
-          </Button>
+          </Button> */}
+
         </CardContent>
       </Card>
       )}

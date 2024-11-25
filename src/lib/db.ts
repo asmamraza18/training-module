@@ -1,14 +1,20 @@
 import { drizzle } from "drizzle-orm/libsql/web";
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 
-const db = drizzle({
+export const db = drizzle({
   connection: {
-    url: import.meta.env.PROD
-      ? import.meta.env.DATABASE_URL
-      : "http://127.0.0.1:8080",
-    authToken: import.meta.env.PROD && import.meta.env.DATABASE_AUTH_TOKEN,
+    url: "libsql://trainingmodule-asmamraza18.turso.io",
+    authToken : "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzE5Mzk0MjYsImlkIjoiNWI1ZjhmMGItZmI4Ny00YzRkLWIzMzktZmZiYmQ3M2Q2MmY0In0.Guy2vnbFHA1FqjJ7YNV1_5MyRwH7QSyXydSJ6mNr2JGv_YlwTZZP-diFwcTXgKQd7V6iNTWJNivVpKXXR36DDA"
   },
 });
+
+//test table
+export const profiles = sqliteTable('profiles', {
+  id: integer(),
+  firstName: text("first_name"),
+  lastName: text("last_name")
+});
+
 
 // Users table
 export const users = sqliteTable("users", {
@@ -36,7 +42,7 @@ export const modules = sqliteTable("modules", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   trainingId: integer("training_id")
     .notNull()
-    .references(() => trainings.id),
+    .references(() => trainings.id, {onDelete: 'cascade'}),
   title: text("title").notNull(),
   description: text("description"),
   order: integer("order").notNull(), // sequence within the training
@@ -79,6 +85,8 @@ export const trainingProgress = sqliteTable("training_progress", {
   completedAt: integer("completed_at", { mode: "timestamp" }),
   lastAccessedAt: integer("last_accessed_at", { mode: "timestamp" }),
 });
+
+
 
 // Relations
 // export const usersRelations = relations(users, ({ many }) => ({

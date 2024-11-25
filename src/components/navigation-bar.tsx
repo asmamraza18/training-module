@@ -1,9 +1,7 @@
 "use client";
 
 import { Link } from "@tanstack/react-router";
-
 import * as React from "react";
-
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,31 +10,77 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import db, { users } from "../lib/db";
 
 export default function NavigationBar() {
-  return (
+
+  //const useLoaderData = async () => await db.select().from(users)
+  //const userData = useLoaderData();
+
+  const [isLogin, setLogin] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const handleLogin = () => {
+    // Simulate authentication logic
+    setLogin(true);
+  };
+
+  const handleLogout = () => {
+    setLogin(false);
+  };
+
+  return (    
     <NavigationMenu>
+
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link to="/" className={navigationMenuTriggerStyle()}>
-            Dashboard
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/about" className={navigationMenuTriggerStyle()}>
-            About
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/module" className={navigationMenuTriggerStyle()}>
-            Modules
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/auth" className={navigationMenuTriggerStyle()}>
-            Account
-          </Link>
-        </NavigationMenuItem>
+        {!isLogin ? (
+          // Navigation for unauthenticated users
+          <>
+            <NavigationMenuItem>
+              <Link to="/" className={navigationMenuTriggerStyle()}>
+                Home
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/about" className={navigationMenuTriggerStyle()}>
+                About
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+            <Link to="/auth" className={navigationMenuTriggerStyle()}>
+                Account
+              </Link>
+            </NavigationMenuItem>
+          </>
+        ) : (
+          // Navigation for authenticated users
+          <>
+            <NavigationMenuItem>
+              <Link to="/dashboard" className={navigationMenuTriggerStyle()}>
+                Dashboard
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/about" className={navigationMenuTriggerStyle()}>
+                About
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/module" className={navigationMenuTriggerStyle()}>
+                Modules
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <button
+                onClick={handleLogout}
+                className={navigationMenuTriggerStyle()}
+              >
+                Logout
+              </button>
+            </NavigationMenuItem>
+          </>
+        )}
       </NavigationMenuList>
     </NavigationMenu>
   );

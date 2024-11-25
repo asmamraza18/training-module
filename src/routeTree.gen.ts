@@ -18,6 +18,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as AuthImport } from './routes/auth'
 import { Route as ModuleIndexImport } from './routes/module/index'
+import { Route as ModuleQuizModuleIdImport } from './routes/module/$quizModuleId'
 import { Route as ModuleModuleIdImport } from './routes/module/$moduleId'
 
 // Create Virtual Routes
@@ -59,6 +60,11 @@ const IndexLazyRoute = IndexLazyImport.update({
 
 const ModuleIndexRoute = ModuleIndexImport.update({
   path: '/module/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ModuleQuizModuleIdRoute = ModuleQuizModuleIdImport.update({
+  path: '/module/$quizModuleId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -120,6 +126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleModuleIdImport
       parentRoute: typeof rootRoute
     }
+    '/module/$quizModuleId': {
+      id: '/module/$quizModuleId'
+      path: '/module/$quizModuleId'
+      fullPath: '/module/$quizModuleId'
+      preLoaderRoute: typeof ModuleQuizModuleIdImport
+      parentRoute: typeof rootRoute
+    }
     '/module/': {
       id: '/module/'
       path: '/module'
@@ -140,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/module/$quizModuleId': typeof ModuleQuizModuleIdRoute
   '/module': typeof ModuleIndexRoute
 }
 
@@ -151,6 +165,7 @@ export interface FileRoutesByTo {
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/module/$quizModuleId': typeof ModuleQuizModuleIdRoute
   '/module': typeof ModuleIndexRoute
 }
 
@@ -163,6 +178,7 @@ export interface FileRoutesById {
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/module/$quizModuleId': typeof ModuleQuizModuleIdRoute
   '/module/': typeof ModuleIndexRoute
 }
 
@@ -176,6 +192,7 @@ export interface FileRouteTypes {
     | '/training'
     | '/about'
     | '/module/$moduleId'
+    | '/module/$quizModuleId'
     | '/module'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -186,6 +203,7 @@ export interface FileRouteTypes {
     | '/training'
     | '/about'
     | '/module/$moduleId'
+    | '/module/$quizModuleId'
     | '/module'
   id:
     | '__root__'
@@ -196,6 +214,7 @@ export interface FileRouteTypes {
     | '/training'
     | '/about'
     | '/module/$moduleId'
+    | '/module/$quizModuleId'
     | '/module/'
   fileRoutesById: FileRoutesById
 }
@@ -208,6 +227,7 @@ export interface RootRouteChildren {
   TrainingRoute: typeof TrainingRoute
   AboutLazyRoute: typeof AboutLazyRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
+  ModuleQuizModuleIdRoute: typeof ModuleQuizModuleIdRoute
   ModuleIndexRoute: typeof ModuleIndexRoute
 }
 
@@ -219,6 +239,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrainingRoute: TrainingRoute,
   AboutLazyRoute: AboutLazyRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
+  ModuleQuizModuleIdRoute: ModuleQuizModuleIdRoute,
   ModuleIndexRoute: ModuleIndexRoute,
 }
 
@@ -241,6 +262,7 @@ export const routeTree = rootRoute
         "/training",
         "/about",
         "/module/$moduleId",
+        "/module/$quizModuleId",
         "/module/"
       ]
     },
@@ -264,6 +286,9 @@ export const routeTree = rootRoute
     },
     "/module/$moduleId": {
       "filePath": "module/$moduleId.tsx"
+    },
+    "/module/$quizModuleId": {
+      "filePath": "module/$quizModuleId.tsx"
     },
     "/module/": {
       "filePath": "module/index.tsx"

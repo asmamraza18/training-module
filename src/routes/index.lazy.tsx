@@ -1,205 +1,115 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import { BarChart, Book, Trophy, Users } from "lucide-react";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { BookOpen, Users, Award, ArrowRight } from 'lucide-react'
+import { createLazyFileRoute, Link } from '@tanstack/react-router'
 
-export default function Dashboard() {
+export const Route = createLazyFileRoute('/')({
+  component: Index,
+})
+
+export default function Index() {
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <h1 className="text-3xl font-bold">Welcome to Your Training Dashboard</h1>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Modules</CardTitle>
-            <Book className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Completed Modules
-            </CardTitle>
-            <Trophy className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Overall Progress
-            </CardTitle>
-            <BarChart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">33%</div>
-            <Progress value={33} className="mt-2" />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Trainee Rank</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24 / 100</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Tabs defaultValue="modules" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="modules">Learning Modules</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-          <TabsTrigger value="resources">Resources</TabsTrigger>
-        </TabsList>
-        <TabsContent value="modules" className="space-y-4">
-          <h2 className="text-2xl font-bold">Your Learning Modules</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              "Introduction to Training",
-              "Core Concepts",
-              "Advanced Techniques",
-              "Practical Applications",
-            ].map((module, index) => (
-              <Card key={index}>
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1">
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                  Welcome to Acme Training
+                </h1>
+                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                  Unlock your potential with our comprehensive online training
+                  platform. Learn at your own pace and achieve your goals.
+                </p>
+              </div>
+              <div className="space-x-4">
+                <Button asChild>
+                  <Link href="/auth">Get Started</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="#features">Learn More</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          id="features"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800"
+        >
+          <div className="container px-4 md:px-6">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
+              Why Choose Our Training Platform?
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card>
                 <CardHeader>
-                  <CardTitle>{module}</CardTitle>
-                  <CardDescription>Module {index + 1}</CardDescription>
+                  <BookOpen className="w-8 h-8 mb-2" />
+                  <CardTitle>Comprehensive Courses</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Link
-                    to={`/module/${index + 1}`}
-                    className="text-primary hover:underline"
-                  >
-                    Continue Learning
-                  </Link>
+                  Access a wide range of courses covering various topics and
+                  skill levels.
                 </CardContent>
               </Card>
-            ))}
+              <Card>
+                <CardHeader>
+                  <Users className="w-8 h-8 mb-2" />
+                  <CardTitle>Expert Instructors</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  Learn from industry professionals with years of experience in
+                  their fields.
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <Award className="w-8 h-8 mb-2" />
+                  <CardTitle>Certifications</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  Earn recognized certifications upon completion of your
+                  courses.
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </TabsContent>
-        <TabsContent value="performance" className="space-y-4">
-          <h2 className="text-2xl font-bold">Your Performance</h2>
-          <Card>
-            <CardHeader>
-              <CardTitle>Performance Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
+        </section>
+        <section className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Module Completion Rate</span>
-                  <span className="font-bold">75%</span>
-                </div>
-                <Progress value={75} />
-                <div className="flex justify-between">
-                  <span>Average Quiz Score</span>
-                  <span className="font-bold">82%</span>
-                </div>
-                <Progress value={82} />
-                <div className="flex justify-between">
-                  <span>Engagement Score</span>
-                  <span className="font-bold">90%</span>
-                </div>
-                <Progress value={90} />
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  Ready to Start Learning?
+                </h2>
+                <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
+                  Join thousands of learners who have already transformed their
+                  careers with our training platform.
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="resources" className="space-y-4">
-          <h2 className="text-2xl font-bold">Training Resources</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Instructional Materials</CardTitle>
-                <CardDescription>
-                  Access supplementary learning materials
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-disc list-inside space-y-2">
-                  <li>
-                    <Link
-                      href="/resources/handbook"
-                      className="text-primary hover:underline"
-                    >
-                      Training Handbook
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/resources/glossary"
-                      className="text-primary hover:underline"
-                    >
-                      Glossary of Terms
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/resources/faq"
-                      className="text-primary hover:underline"
-                    >
-                      Frequently Asked Questions
-                    </Link>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Program Information</CardTitle>
-                <CardDescription>
-                  Learn more about your training program
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-disc list-inside space-y-2">
-                  <li>
-                    <Link
-                      href="/program/overview"
-                      className="text-primary hover:underline"
-                    >
-                      Program Overview
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/program/schedule"
-                      className="text-primary hover:underline"
-                    >
-                      Training Schedule
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/program/objectives"
-                      className="text-primary hover:underline"
-                    >
-                      Learning Objectives
-                    </Link>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
+              <Button asChild className="w-full sm:w-auto">
+                <Link href="/auth">
+                  Log In to Your Account <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
-        </TabsContent>
-      </Tabs>
+        </section>
+      </main>
+      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          © {new Date().getFullYear()} Acme Training. All rights reserved.
+        </p>
+        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+          <Link className="text-xs hover:underline underline-offset-4" href="#">
+            Terms of Service
+          </Link>
+          <Link className="text-xs hover:underline underline-offset-4" href="#">
+            Privacy
+          </Link>
+        </nav>
+      </footer>
     </div>
-  );
+  )
 }
-
-export const Route = createLazyFileRoute("/")({
-  component: Dashboard,
-});

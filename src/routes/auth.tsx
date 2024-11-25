@@ -17,12 +17,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToastAction } from "@/components/ui/toast";
+import {db,  users } from "@/lib/db";
 import { useToast } from "@/hooks/use-toast";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { Name } from "drizzle-orm";
 
 export const Route = createFileRoute("/auth")({
   component: Auth,
+  loader: async () => await db.insert(users).values([]),
 });
 
 export default function Auth() {
@@ -37,7 +40,10 @@ export default function Auth() {
   const [loginError, setLoginError] = useState("");
   const [registerError, setRegisterError] = useState("");
   const [activeTab, setActiveTab] = useState("login");
+  
+  const userData = Route.useLoaderData();
 
+  const navigate = useNavigate();
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginEmail || !loginPassword) {
@@ -50,7 +56,8 @@ export default function Auth() {
         description: "Friday, February 10, 2023 at 5:57 PM",
         action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
       });
-    }
+      navigate({ to: "/dashboard" });
+    }    
   };
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +72,7 @@ export default function Auth() {
         description: "You have successfully created an account",
       });
     }
+    navigate({ to: "/dashboard" });
   };
 
   return (
@@ -111,7 +119,7 @@ export default function Auth() {
                 )}
               </CardContent>
               <CardFooter>
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" >
                   Sign In
                 </Button>
               </CardFooter>

@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "55c85a45-4055-4eeb-aa96-6f9ea73d794f",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "40e3b655-1e0c-417e-8c4f-3b9959100dde",
+  "prevId": "55c85a45-4055-4eeb-aa96-6f9ea73d794f",
   "tables": {
     "module_progress": {
       "name": "module_progress",
@@ -109,6 +109,13 @@
           "notNull": true,
           "autoincrement": true
         },
+        "training_id": {
+          "name": "training_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "title": {
           "name": "title",
           "type": "text",
@@ -146,7 +153,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "modules_training_id_trainings_id_fk": {
+          "name": "modules_training_id_trainings_id_fk",
+          "tableFrom": "modules",
+          "tableTo": "trainings",
+          "columnsFrom": [
+            "training_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
