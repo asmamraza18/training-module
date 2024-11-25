@@ -1,0 +1,1 @@
+ALTER TABLE `modules` ADD `training_id` integer NOT NULL REFERENCES trainings(id);
