@@ -1,23 +1,11 @@
-import {
-  TabsRoot,
-  TabsList1,
-  TabsTrigger1,
-  TabsContent1,
-} from "@/components/ui/tabs";
+import { TabsRoot, TabsList1, TabsTrigger1, TabsContent1 } from "@/components/ui/tabs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToastAction } from "@/components/ui/toast";
-import {db,  users } from "@/lib/db";
+import { db, users } from "@/lib/db";
 import { useToast } from "@/hooks/use-toast";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -40,7 +28,7 @@ export default function Auth() {
   const [loginError, setLoginError] = useState("");
   const [registerError, setRegisterError] = useState("");
   const [activeTab, setActiveTab] = useState("login");
-  
+
   const userData = Route.useLoaderData();
 
   const navigate = useNavigate();
@@ -57,7 +45,7 @@ export default function Auth() {
         action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
       });
       navigate({ to: "/dashboard" });
-    }    
+    }
   };
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,12 +73,8 @@ export default function Auth() {
         <TabsContent value="login">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">
-                Welcome Back
-              </CardTitle>
-              <CardDescription className="text-center">
-                Please sign in to your account
-              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
+              <CardDescription className="text-center">Please sign in to your account</CardDescription>
             </CardHeader>
             <form onSubmit={handleLoginSubmit}>
               <CardContent className="space-y-2">
@@ -114,12 +98,10 @@ export default function Auth() {
                     required
                   />
                 </div>
-                {loginError && (
-                  <p className="text-sm text-red-500">{loginError}</p>
-                )}
+                {loginError && <p className="text-sm text-red-500">{loginError}</p>}
               </CardContent>
               <CardFooter>
-                <Button type="submit" className="w-full" >
+                <Button type="submit" className="w-full">
                   Sign In
                 </Button>
               </CardFooter>
@@ -129,12 +111,8 @@ export default function Auth() {
         <TabsContent value="register">
           <Card>
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">
-                Register
-              </CardTitle>
-              <CardDescription className="text-center">
-                Please create an account
-              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-center">Register</CardTitle>
+              <CardDescription className="text-center">Please create an account</CardDescription>
             </CardHeader>
             <form onSubmit={handleRegisterSubmit}>
               <CardContent className="space-y-2">
@@ -178,9 +156,7 @@ export default function Auth() {
                     required
                   />
                 </div>
-                {registerError && (
-                  <p className="text-sm text-red-500">{registerError}</p>
-                )}
+                {registerError && <p className="text-sm text-red-500">{registerError}</p>}
               </CardContent>
               <CardFooter>
                 <Button type="submit" className="w-full">

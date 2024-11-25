@@ -1,9 +1,9 @@
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Tabs = TabsPrimitive.Root
+const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -17,8 +17,8 @@ const TabsList = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsList.displayName = TabsPrimitive.List.displayName
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
@@ -32,8 +32,8 @@ const TabsTrigger = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
@@ -47,25 +47,18 @@ const TabsContent = React.forwardRef<
     )}
     {...props}
   />
-))
+));
 
-TabsContent.displayName = TabsPrimitive.Content.displayName
+TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 ///////////Login Tab////////////////
 const TabsRoot = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.Root
-    ref={ref}
-    className={cn(
-      "flex-col w-80 shadow-lg",
-      className
-    )}
-    {...props}
-  />
-))
-TabsRoot.displayName = TabsPrimitive.Root.displayName
+  <TabsPrimitive.Root ref={ref} className={cn("flex-col w-80 shadow-lg", className)} {...props} />
+));
+TabsRoot.displayName = TabsPrimitive.Root.displayName;
 
 const TabsList1 = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -73,14 +66,11 @@ const TabsList1 = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn(
-      "shrink-0 flex border-b-2 border-solid border-gray-400",
-      className
-    )}
+    className={cn("shrink-0 flex border-b-2 border-solid border-gray-400", className)}
     {...props}
   />
-))
-TabsList1.displayName = TabsPrimitive.List.displayName
+));
+TabsList1.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger1 = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
@@ -94,8 +84,8 @@ const TabsTrigger1 = React.forwardRef<
     )}
     {...props}
   />
-))
-TabsTrigger1.displayName = TabsPrimitive.Trigger.displayName
+));
+TabsTrigger1.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent1 = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
@@ -103,14 +93,11 @@ const TabsContent1 = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn(
-      "grow p-5 bg-white rounded-bl-md rounded-br-md outline-none",
-      className
-    )}
+    className={cn("grow p-5 bg-white rounded-bl-md rounded-br-md outline-none", className)}
     {...props}
   />
-))
+));
 
-TabsContent1.displayName = TabsPrimitive.Content.displayName
+TabsContent1.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent, TabsRoot, TabsList1, TabsTrigger1, TabsContent1}
+export { Tabs, TabsList, TabsTrigger, TabsContent, TabsRoot, TabsList1, TabsTrigger1, TabsContent1 };

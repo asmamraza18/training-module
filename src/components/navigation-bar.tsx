@@ -14,7 +14,6 @@ import { useState } from "react";
 import db, { users } from "../lib/db";
 
 export default function NavigationBar() {
-
   //const useLoaderData = async () => await db.select().from(users)
   //const userData = useLoaderData();
 
@@ -30,9 +29,8 @@ export default function NavigationBar() {
     setLogin(false);
   };
 
-  return (    
+  return (
     <NavigationMenu>
-
       <NavigationMenuList>
         {!isLogin ? (
           // Navigation for unauthenticated users
@@ -48,7 +46,7 @@ export default function NavigationBar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-            <Link to="/auth" className={navigationMenuTriggerStyle()}>
+              <Link to="/auth" className={navigationMenuTriggerStyle()}>
                 Account
               </Link>
             </NavigationMenuItem>
@@ -72,10 +70,7 @@ export default function NavigationBar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <button
-                onClick={handleLogout}
-                className={navigationMenuTriggerStyle()}
-              >
+              <button onClick={handleLogout} className={navigationMenuTriggerStyle()}>
                 Logout
               </button>
             </NavigationMenuItem>
@@ -86,28 +81,25 @@ export default function NavigationBar() {
   );
 }
 
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
+const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWithoutRef<"a">>(
+  ({ className, title, children, ...props }, ref) => {
+    return (
+      <li>
+        <NavigationMenuLink asChild>
+          <a
+            ref={ref}
+            className={cn(
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              className
+            )}
+            {...props}
+          >
+            <div className="text-sm font-medium leading-none">{title}</div>
+            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
+          </a>
+        </NavigationMenuLink>
+      </li>
+    );
+  }
+);
 ListItem.displayName = "ListItem";

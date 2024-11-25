@@ -1,13 +1,7 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {db,  users } from "@/lib/db";
+import { db, users } from "@/lib/db";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BarChart, Book, Trophy, Users } from "lucide-react";
 
@@ -45,9 +39,7 @@ export default function Dashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Completed Modules
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Completed Modules</CardTitle>
             <Trophy className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -56,9 +48,7 @@ export default function Dashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Overall Progress
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Overall Progress</CardTitle>
             <BarChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -86,27 +76,21 @@ export default function Dashboard() {
         <TabsContent value="modules" className="space-y-4">
           <h2 className="text-2xl font-bold">Your Learning Modules</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              "Introduction to Training",
-              "Core Concepts",
-              "Advanced Techniques",
-              "Practical Applications",
-            ].map((module, index) => (
-              <Card key={index}>
-                <CardHeader>
-                  <CardTitle>{module}</CardTitle>
-                  <CardDescription>Module {index + 1}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Link
-                    to={`/module/${index + 1}`}
-                    className="text-primary hover:underline"
-                  >
-                    Continue Learning
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
+            {["Introduction to Training", "Core Concepts", "Advanced Techniques", "Practical Applications"].map(
+              (module, index) => (
+                <Card key={index}>
+                  <CardHeader>
+                    <CardTitle>{module}</CardTitle>
+                    <CardDescription>Module {index + 1}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Link to={`/module/${index + 1}`} className="text-primary hover:underline">
+                      Continue Learning
+                    </Link>
+                  </CardContent>
+                </Card>
+              )
+            )}
           </div>
         </TabsContent>
         <TabsContent value="performance" className="space-y-4">
@@ -142,33 +126,22 @@ export default function Dashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Instructional Materials</CardTitle>
-                <CardDescription>
-                  Access supplementary learning materials
-                </CardDescription>
+                <CardDescription>Access supplementary learning materials</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="list-disc list-inside space-y-2">
                   <li>
-                    <Link
-                      href="/resources/handbook"
-                      className="text-primary hover:underline"
-                    >
+                    <Link href="/resources/handbook" className="text-primary hover:underline">
                       Training Handbook
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/resources/glossary"
-                      className="text-primary hover:underline"
-                    >
+                    <Link href="/resources/glossary" className="text-primary hover:underline">
                       Glossary of Terms
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/resources/faq"
-                      className="text-primary hover:underline"
-                    >
+                    <Link href="/resources/faq" className="text-primary hover:underline">
                       Frequently Asked Questions
                     </Link>
                   </li>
@@ -178,33 +151,22 @@ export default function Dashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Program Information</CardTitle>
-                <CardDescription>
-                  Learn more about your training program
-                </CardDescription>
+                <CardDescription>Learn more about your training program</CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className="list-disc list-inside space-y-2">
                   <li>
-                    <Link
-                      href="/program/overview"
-                      className="text-primary hover:underline"
-                    >
+                    <Link href="/program/overview" className="text-primary hover:underline">
                       Program Overview
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/program/schedule"
-                      className="text-primary hover:underline"
-                    >
+                    <Link href="/program/schedule" className="text-primary hover:underline">
                       Training Schedule
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/program/objectives"
-                      className="text-primary hover:underline"
-                    >
+                    <Link href="/program/objectives" className="text-primary hover:underline">
                       Learning Objectives
                     </Link>
                   </li>

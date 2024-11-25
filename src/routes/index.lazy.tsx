@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Users, Award, ArrowRight } from 'lucide-react'
-import { createLazyFileRoute, Link } from '@tanstack/react-router'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BookOpen, Users, Award, ArrowRight } from "lucide-react";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute('/')({
+export const Route = createLazyFileRoute("/")({
   component: Index,
-})
+});
 
 export default function Index() {
   return (
@@ -19,8 +19,8 @@ export default function Index() {
                   Welcome to Acme Training
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Unlock your potential with our comprehensive online training
-                  platform. Learn at your own pace and achieve your goals.
+                  Unlock your potential with our comprehensive online training platform. Learn at your own pace and
+                  achieve your goals.
                 </p>
               </div>
               <div className="space-x-4">
@@ -34,10 +34,7 @@ export default function Index() {
             </div>
           </div>
         </section>
-        <section
-          id="features"
-          className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800"
-        >
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
           <div className="container px-4 md:px-6">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
               Why Choose Our Training Platform?
@@ -48,30 +45,21 @@ export default function Index() {
                   <BookOpen className="w-8 h-8 mb-2" />
                   <CardTitle>Comprehensive Courses</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  Access a wide range of courses covering various topics and
-                  skill levels.
-                </CardContent>
+                <CardContent>Access a wide range of courses covering various topics and skill levels.</CardContent>
               </Card>
               <Card>
                 <CardHeader>
                   <Users className="w-8 h-8 mb-2" />
                   <CardTitle>Expert Instructors</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  Learn from industry professionals with years of experience in
-                  their fields.
-                </CardContent>
+                <CardContent>Learn from industry professionals with years of experience in their fields.</CardContent>
               </Card>
               <Card>
                 <CardHeader>
                   <Award className="w-8 h-8 mb-2" />
                   <CardTitle>Certifications</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  Earn recognized certifications upon completion of your
-                  courses.
-                </CardContent>
+                <CardContent>Earn recognized certifications upon completion of your courses.</CardContent>
               </Card>
             </div>
           </div>
@@ -84,8 +72,7 @@ export default function Index() {
                   Ready to Start Learning?
                 </h2>
                 <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Join thousands of learners who have already transformed their
-                  careers with our training platform.
+                  Join thousands of learners who have already transformed their careers with our training platform.
                 </p>
               </div>
               <Button asChild className="w-full sm:w-auto">
@@ -111,5 +98,5 @@ export default function Index() {
         </nav>
       </footer>
     </div>
-  )
+  );
 }
