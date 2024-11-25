@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 type Question = {
   id: number;
@@ -34,12 +34,11 @@ const questions: Question[] = [
   },
 ];
 
-export const Route = createFileRoute("/module/$quizModuleId")({
+export const Route = createFileRoute("/module/$moduleId/$quizModuleId")({
   component: Quiz,
 });
 
 function Quiz() {
-  const navigate = useNavigate({ from: "/module/$moduleId" });
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>(new Array(questions.length).fill(-1));
   const [showResults, setShowResults] = useState(false);

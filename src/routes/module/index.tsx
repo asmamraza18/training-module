@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Flame, HardHat, Search, Wrench, Zap } from "lucide-react";
 import { useState } from "react";
@@ -35,7 +36,7 @@ const modules = [
 ];
 
 export default function ModuleSelection() {
-  const navigate = useNavigate({ from: "/module" });
+  const navigate = useNavigate({ from: "/module/$moduleId" });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedModule, setSelectedModule] = useState<number | null>(null);
 
@@ -63,7 +64,10 @@ export default function ModuleSelection() {
         {filteredModules.map((module) => (
           <Card
             key={module.id}
-            className={`cursor-pointer transition-all ${selectedModule === module.id ? "ring-2 ring-primary" : ""}`}
+            className={cn(
+              "cursor-pointer min-h-[150px] transition-all",
+              selectedModule === module.id && "ring-2 ring-primary"
+            )}
             onClick={() => setSelectedModule(module.id)}
           >
             <CardHeader>
@@ -80,17 +84,12 @@ export default function ModuleSelection() {
                 </Badge>
               )}
             </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">
-                Select Module
-              </Button>
-            </CardFooter>
           </Card>
         ))}
       </div>
 
       <Button
-        className="w-full"
+        className="inline-flex"
         disabled={!selectedModule}
         onClick={() => {
           if (selectedModule) {

@@ -18,8 +18,8 @@ import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as AuthImport } from './routes/auth'
 import { Route as ModuleIndexImport } from './routes/module/index'
-import { Route as ModuleQuizModuleIdImport } from './routes/module/$quizModuleId'
-import { Route as ModuleModuleIdImport } from './routes/module/$moduleId'
+import { Route as ModuleModuleIdIndexImport } from './routes/module/$moduleId/index'
+import { Route as ModuleModuleIdQuizModuleIdImport } from './routes/module/$moduleId/$quizModuleId'
 
 // Create Virtual Routes
 
@@ -63,15 +63,17 @@ const ModuleIndexRoute = ModuleIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ModuleQuizModuleIdRoute = ModuleQuizModuleIdImport.update({
-  path: '/module/$quizModuleId',
+const ModuleModuleIdIndexRoute = ModuleModuleIdIndexImport.update({
+  path: '/module/$moduleId/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ModuleModuleIdRoute = ModuleModuleIdImport.update({
-  path: '/module/$moduleId',
-  getParentRoute: () => rootRoute,
-} as any)
+const ModuleModuleIdQuizModuleIdRoute = ModuleModuleIdQuizModuleIdImport.update(
+  {
+    path: '/module/$moduleId/$quizModuleId',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -119,25 +121,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/module/$moduleId': {
-      id: '/module/$moduleId'
-      path: '/module/$moduleId'
-      fullPath: '/module/$moduleId'
-      preLoaderRoute: typeof ModuleModuleIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/module/$quizModuleId': {
-      id: '/module/$quizModuleId'
-      path: '/module/$quizModuleId'
-      fullPath: '/module/$quizModuleId'
-      preLoaderRoute: typeof ModuleQuizModuleIdImport
-      parentRoute: typeof rootRoute
-    }
     '/module/': {
       id: '/module/'
       path: '/module'
       fullPath: '/module'
       preLoaderRoute: typeof ModuleIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/module/$moduleId/$quizModuleId': {
+      id: '/module/$moduleId/$quizModuleId'
+      path: '/module/$moduleId/$quizModuleId'
+      fullPath: '/module/$moduleId/$quizModuleId'
+      preLoaderRoute: typeof ModuleModuleIdQuizModuleIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/module/$moduleId/': {
+      id: '/module/$moduleId/'
+      path: '/module/$moduleId'
+      fullPath: '/module/$moduleId'
+      preLoaderRoute: typeof ModuleModuleIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -152,9 +154,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
-  '/module/$moduleId': typeof ModuleModuleIdRoute
-  '/module/$quizModuleId': typeof ModuleQuizModuleIdRoute
   '/module': typeof ModuleIndexRoute
+  '/module/$moduleId/$quizModuleId': typeof ModuleModuleIdQuizModuleIdRoute
+  '/module/$moduleId': typeof ModuleModuleIdIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -164,9 +166,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
-  '/module/$moduleId': typeof ModuleModuleIdRoute
-  '/module/$quizModuleId': typeof ModuleQuizModuleIdRoute
   '/module': typeof ModuleIndexRoute
+  '/module/$moduleId/$quizModuleId': typeof ModuleModuleIdQuizModuleIdRoute
+  '/module/$moduleId': typeof ModuleModuleIdIndexRoute
 }
 
 export interface FileRoutesById {
@@ -177,9 +179,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
-  '/module/$moduleId': typeof ModuleModuleIdRoute
-  '/module/$quizModuleId': typeof ModuleQuizModuleIdRoute
   '/module/': typeof ModuleIndexRoute
+  '/module/$moduleId/$quizModuleId': typeof ModuleModuleIdQuizModuleIdRoute
+  '/module/$moduleId/': typeof ModuleModuleIdIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -191,9 +193,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/training'
     | '/about'
-    | '/module/$moduleId'
-    | '/module/$quizModuleId'
     | '/module'
+    | '/module/$moduleId/$quizModuleId'
+    | '/module/$moduleId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -202,9 +204,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/training'
     | '/about'
-    | '/module/$moduleId'
-    | '/module/$quizModuleId'
     | '/module'
+    | '/module/$moduleId/$quizModuleId'
+    | '/module/$moduleId'
   id:
     | '__root__'
     | '/'
@@ -213,9 +215,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/training'
     | '/about'
-    | '/module/$moduleId'
-    | '/module/$quizModuleId'
     | '/module/'
+    | '/module/$moduleId/$quizModuleId'
+    | '/module/$moduleId/'
   fileRoutesById: FileRoutesById
 }
 
@@ -226,9 +228,9 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   TrainingRoute: typeof TrainingRoute
   AboutLazyRoute: typeof AboutLazyRoute
-  ModuleModuleIdRoute: typeof ModuleModuleIdRoute
-  ModuleQuizModuleIdRoute: typeof ModuleQuizModuleIdRoute
   ModuleIndexRoute: typeof ModuleIndexRoute
+  ModuleModuleIdQuizModuleIdRoute: typeof ModuleModuleIdQuizModuleIdRoute
+  ModuleModuleIdIndexRoute: typeof ModuleModuleIdIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -238,9 +240,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   TrainingRoute: TrainingRoute,
   AboutLazyRoute: AboutLazyRoute,
-  ModuleModuleIdRoute: ModuleModuleIdRoute,
-  ModuleQuizModuleIdRoute: ModuleQuizModuleIdRoute,
   ModuleIndexRoute: ModuleIndexRoute,
+  ModuleModuleIdQuizModuleIdRoute: ModuleModuleIdQuizModuleIdRoute,
+  ModuleModuleIdIndexRoute: ModuleModuleIdIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -261,9 +263,9 @@ export const routeTree = rootRoute
         "/login",
         "/training",
         "/about",
-        "/module/$moduleId",
-        "/module/$quizModuleId",
-        "/module/"
+        "/module/",
+        "/module/$moduleId/$quizModuleId",
+        "/module/$moduleId/"
       ]
     },
     "/": {
@@ -284,14 +286,14 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.lazy.tsx"
     },
-    "/module/$moduleId": {
-      "filePath": "module/$moduleId.tsx"
-    },
-    "/module/$quizModuleId": {
-      "filePath": "module/$quizModuleId.tsx"
-    },
     "/module/": {
       "filePath": "module/index.tsx"
+    },
+    "/module/$moduleId/$quizModuleId": {
+      "filePath": "module/$moduleId/$quizModuleId.tsx"
+    },
+    "/module/$moduleId/": {
+      "filePath": "module/$moduleId/index.tsx"
     }
   }
 }

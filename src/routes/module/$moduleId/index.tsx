@@ -1,5 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import WeldingJSAInstructions from "./-WeldingJSAInstructions";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,7 +7,7 @@ import data from "@/trainings.json";
 import { PauseCircle, PlayCircle, Volume2, VolumeX } from "lucide-react";
 import { useRef, useState } from "react";
 
-export const Route = createFileRoute("/module/$moduleId")({
+export const Route = createFileRoute("/module/$moduleId/")({
   component: Module,
 });
 
@@ -18,7 +17,6 @@ function Module() {
   const [isMuted, setIsMuted] = useState(false);
   const [hasReadInstructions, setHasReadInstructions] = useState(false);
   const [hasListenedAudio, setHasListenedAudio] = useState(false);
-  const navigate = useNavigate({ from: "/module" });
 
   const modules = data.modules;
   const modulebyId = modules.filter((module) => module.id == moduleId);
@@ -152,34 +150,20 @@ function Module() {
               </label>
             </div>
 
-            <Button>
+            <Button variant="link" asChild>
               <Link
-                to="/module/$quizModuleId"
+                to="/module/$moduleId/$quizModuleId"
                 className={`w-full ${
                   hasReadInstructions && hasListenedAudio ? "" : "cursor-not-allowed text-gray-400"
                 }`}
                 params={{
+                  moduleId: module.id,
                   quizModuleId: module.id,
                 }}
               >
                 Proceed to Practical Training test
               </Link>
             </Button>
-
-            {/* <Button
-            className="w-full"
-            disabled={!hasReadInstructions || !hasListenedAudio}
-            onClick={() => {
-              if (hasReadInstructions && hasListenedAudio) {
-                // Navigate to the selected module
-                console.log(`Navigating to module ${module.id}`);
-                // You would typically use a router here, e.g.:
-                navigate({ to: `/module/${module.id}` });
-              }
-            }}
-          >
-            Proceed to Practical Training
-          </Button> */}
           </CardContent>
         </Card>
       ))}
