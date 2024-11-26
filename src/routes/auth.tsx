@@ -1,19 +1,19 @@
-import { TabsRoot, TabsList1, TabsTrigger1, TabsContent1 } from "@/components/ui/tabs";
+//import { TabsRoot, TabsList1, TabsTrigger1, TabsContent1 } from "@/components/ui/tabs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ToastAction } from "@/components/ui/toast";
-import { db, users } from "@/lib/db";
 import { useToast } from "@/hooks/use-toast";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { Name } from "drizzle-orm";
+import { useContext, useState } from "react";
+import db, { users } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { AuthContext } from "@/components/navigation-bar";
 
 export const Route = createFileRoute("/auth")({
   component: Auth,
-  loader: async () => await db.insert(users).values([]),
 });
 
 export default function Auth() {
@@ -29,25 +29,30 @@ export default function Auth() {
   const [registerError, setRegisterError] = useState("");
   const [activeTab, setActiveTab] = useState("login");
 
-  const userData = Route.useLoaderData();
-
   const navigate = useNavigate();
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const { login } = useContext(AuthContext);
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginEmail || !loginPassword) {
       setLoginError("Please fill in all fields");
     } else {
       setLoginError("");
+      try {
+        // Find user by email
+        const [user] = await db.select().from(users).where(eq(users.email, loginEmail));
 
-      toast({
-        title: "Scheduled: Catch up ",
-        description: "Friday, February 10, 2023 at 5:57 PM",
-        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-      });
+        if (!user) {
+          console.error("User not found");
+          return;
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+      }
       navigate({ to: "/dashboard" });
     }
   };
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!registerEmail || !registerPassword || !registerConfirmPassword) {
@@ -55,12 +60,24 @@ export default function Auth() {
     } else {
       setRegisterError("");
 
+      try {
+        // Insert user data
+        await db.insert(users).values({
+          email: registerEmail,
+          name: registerName,
+        });
+
+        console.log("User inserted successfully");
+        // Add login/redirect logic here
+      } catch (error) {
+        console.error("Registration error:", error);
+      }
+      navigate({ to: "/dashboard" });
       toast({
         title: "User created",
         description: "You have successfully created an account",
       });
     }
-    navigate({ to: "/dashboard" });
   };
 
   return (
