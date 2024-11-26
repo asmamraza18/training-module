@@ -14,7 +14,12 @@ import { useState, useEffect } from "react";
 import { eq } from "drizzle-orm";
 import db, { users } from "../lib/db";
 
-export const AuthContext = React.createContext({
+export const AuthContext = React.createContext<{
+  isLogin: boolean;
+  user: any;
+  login: (email: string) => Promise<void>;
+  logout: () => void;
+}>({
   isLogin: false,
   user: null,
   login: async () => {},
