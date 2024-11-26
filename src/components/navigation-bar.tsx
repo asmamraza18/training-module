@@ -10,24 +10,62 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { eq } from "drizzle-orm";
 import db, { users } from "../lib/db";
 
-export default function NavigationBar() {
-  //const useLoaderData = async () => await db.select().from(users)
-  //const userData = useLoaderData();
+export const AuthContext = React.createContext({
+  isLogin: false,
+  user: null,
+  login: async () => {},
+  logout: () => {},
+});
 
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLogin, setLogin] = useState(false);
   const [user, setUser] = useState(null);
 
-  const handleLogin = () => {
-    // Simulate authentication logic
-    setLogin(true);
+  // Check for existing session on mount
+  useEffect(() => {
+    const checkSession = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setLogin(true);
+        setUser(JSON.parse(storedUser));
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  const login = async (email: any) => {
+    try {
+      // Find user by email
+      const [foundUser] = await db.select().from(users).where(eq(users.email, email));
+
+      if (!foundUser) {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  };
+  const logout = () => {
+    // Clear login state
+    setLogin(false);
+    setUser(null);
+
+    // Remove from local storage
+    localStorage.removeItem("user");
   };
 
-  const handleLogout = () => {
-    setLogin(false);
-  };
+  return <AuthContext.Provider value={{ isLogin, user, login, logout }}>{children}</AuthContext.Provider>;
+}
+
+export default function NavigationBar() {
+  // Use the AuthContext
+  const { isLogin, user, logout } = React.useContext(AuthContext);
 
   return (
     <NavigationMenu>
@@ -70,7 +108,10 @@ export default function NavigationBar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <button onClick={handleLogout} className={navigationMenuTriggerStyle()}>
+              <span className="px-4 py-2 text-sm text-gray-600">Welcome, {user?.name || "User"}</span>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <button onClick={logout} className={navigationMenuTriggerStyle()}>
                 Logout
               </button>
             </NavigationMenuItem>
