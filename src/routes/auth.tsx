@@ -97,11 +97,11 @@ export default function Auth() {
       setLoginError("");
       try {
         await login(loginEmail);
-        toast.success("Login Successful", {
-          description: `Welcome back, ${user?.name || "User"}!`,
+        toast.success("Your account has been created successfully!", {
+          description: "Happy Learning!",
           duration: 3000,
           position: "top-right",
-          icon: "👋",
+          icon: "🎉",
         });
       } catch (error) {
         console.error("Login error:", error);
