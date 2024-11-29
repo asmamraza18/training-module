@@ -10,67 +10,20 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
-import { eq } from "drizzle-orm";
-import db, { users } from "../lib/db";
-
-export const AuthContext = React.createContext<{
-  isLogin: boolean;
-  user: any;
-  login: (email: string) => Promise<void>;
-  logout: () => void;
-}>({
-  isLogin: false,
-  user: null,
-  login: async () => {},
-  logout: () => {},
-});
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isLogin, setLogin] = useState(false);
-  const [user, setUser] = useState(null);
-
-  // Check for existing session on mount
-  useEffect(() => {
-    const checkSession = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setLogin(true);
-        setUser(JSON.parse(storedUser));
-      }
-    };
-
-    checkSession();
-  }, []);
-
-  const login = async (email: any) => {
-    try {
-      // Find user by email
-      const [foundUser] = await db.select().from(users).where(eq(users.email, email));
-
-      if (!foundUser) {
-        throw new Error("User not found");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      throw error;
-    }
-  };
-  const logout = () => {
-    // Clear login state
-    setLogin(false);
-    setUser(null);
-
-    // Remove from local storage
-    localStorage.removeItem("user");
-  };
-
-  return <AuthContext.Provider value={{ isLogin, user, login, logout }}>{children}</AuthContext.Provider>;
-}
+import { AuthContext } from "@/context/AuthProvider";
 
 export default function NavigationBar() {
   // Use the AuthContext
-  const { isLogin, user, logout } = React.useContext(AuthContext);
+  const { user, isLogin, setIsLogin, setUser } = React.useContext(AuthContext);
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    setIsLogin(false);
+    setUser(null);
+  };
+
+  console.log("User", user);
+  console.log("isLogin", isLogin);
 
   return (
     <NavigationMenu>
@@ -117,7 +70,7 @@ export default function NavigationBar() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <button onClick={logout} className={navigationMenuTriggerStyle()}>
-                Logout
+                <Link to="/">Logout</Link>
               </button>
             </NavigationMenuItem>
           </>

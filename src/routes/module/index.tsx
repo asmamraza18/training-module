@@ -89,7 +89,7 @@ export default function ModuleSelection() {
       </div>
 
       <Button
-        className="inline-flex"
+        className="inline-flex w-full"
         disabled={!selectedModule}
         onClick={() => {
           if (selectedModule) {
