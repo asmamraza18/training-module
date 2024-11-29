@@ -4,9 +4,59 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/AuthProvider";
 import { db, users } from "@/lib/db";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BarChart, Book, Trophy, Users } from "lucide-react";
-import React from "react";
+import { BarChart, Book, Trophy, Users, Flame, HardHat, Wrench, Zap } from "lucide-react";
 import { useContext } from "react";
+
+const moduleProgress = [
+  {
+    id: 1,
+    user_id: 4, // Links to a specific user in the Users table
+    module_id: 1, // Links to the "Getting Started with Programming" module
+    status: "in_progress", // Indicates the user is currently working on this module
+    progress: 50.0, // 50% progress made
+    started_at: 1698304800, // Timestamp for when the module was started
+    completed_at: null, // Not yet completed
+    last_accessed_at: 1698312000, // Timestamp for the last time this module was accessed
+  },
+  {
+    id: 2,
+    user_id: 4,
+    module_id: 2,
+    status: "completed",
+    progress: 100.0,
+    started_at: 1698290400,
+    completed_at: 1698316800,
+    last_accessed_at: 1698316800,
+  },
+];
+
+const modules = [
+  {
+    id: 1,
+    title: "Welding Machine JSA",
+    description: "Job Safety Analysis for welding machine operations",
+    icon: Flame,
+    recommended: true,
+  },
+  {
+    id: 2,
+    title: "Personal Protective Equipment",
+    description: "Proper use and maintenance of PPE",
+    icon: HardHat,
+  },
+  {
+    id: 3,
+    title: "Basic Tool Safety",
+    description: "Safe handling of common workshop tools",
+    icon: Wrench,
+  },
+  {
+    id: 4,
+    title: "Electrical Safety",
+    description: "Fundamentals of electrical safety in the workplace",
+    icon: Zap,
+  },
+];
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -17,8 +67,31 @@ export default function Dashboard() {
   // Loader will run on page load
   // Take data from loader
   const { user } = useContext(AuthContext);
+  //array progress By userId
+  const moduleByUserId = moduleProgress.filter((progress) => progress.user_id == user.id);
+  //total learning module
+  const totalModules = moduleByUserId.length;
+  //total completed module
+  const completeModule = moduleByUserId.filter((completed) => completed.status == "completed").length;
+  //array user's module
+  const learningModules = modules.filter((module) =>
+    moduleByUserId.some((progress) => progress.module_id === module.id)
+  );
+
+  // Map modules to include progress from moduleProgress
+  const modulesWithProgress = modules.map((module) => {
+    const progressEntry = moduleByUserId.find((progress) => progress.module_id === module.id);
+    return {
+      ...module,
+      progress: progressEntry ? progressEntry.progress : 0, // Default to 0 if no entry
+    };
+  });
+
+  // Calculate overall progress
+  const overallProgress = modulesWithProgress.reduce((total, module) => total + module.progress, 0) / modules.length;
+
   const userData = Route.useLoaderData();
-  //console.log(user);
+  //console.log(moduleByUserId);
   // user the loader data to display data
 
   return (
@@ -39,7 +112,7 @@ export default function Dashboard() {
             <Book className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-2xl font-bold">{totalModules}</div>
           </CardContent>
         </Card>
         <Card>
@@ -48,7 +121,7 @@ export default function Dashboard() {
             <Trophy className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">4</div>
+            <div className="text-2xl font-bold">{completeModule}</div>
           </CardContent>
         </Card>
         <Card>
@@ -57,8 +130,8 @@ export default function Dashboard() {
             <BarChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">33%</div>
-            <Progress value={33} className="mt-2" />
+            <div className="text-2xl font-bold">{overallProgress.toFixed()}%</div>
+            <Progress value={overallProgress} className="mt-2" />
           </CardContent>
         </Card>
         <Card>
@@ -81,21 +154,19 @@ export default function Dashboard() {
         <TabsContent value="modules" className="space-y-4">
           <h2 className="text-2xl font-bold">Your Learning Modules</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {["Introduction to Training", "Core Concepts", "Advanced Techniques", "Practical Applications"].map(
-              (module, index) => (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle>{module}</CardTitle>
-                    <CardDescription>Module {index + 1}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Link to={`/module/${index + 1}`} className="text-primary hover:underline">
-                      Continue Learning
-                    </Link>
-                  </CardContent>
-                </Card>
-              )
-            )}
+            {learningModules.map((module) => (
+              <Card key={module.id}>
+                <CardHeader>
+                  <CardTitle>{module.title}</CardTitle>
+                  <CardDescription>{module.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link to={`/module/${module.id}`} className="text-primary hover:underline">
+                    Continue Learning
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </TabsContent>
         <TabsContent value="performance" className="space-y-4">
