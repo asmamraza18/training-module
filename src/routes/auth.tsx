@@ -4,21 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/hooks/use-toast";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useContext, useState } from "react";
 import db, { users } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import { AuthContext } from "@/components/navigation-bar";
+import { AuthContext } from "@/context/AuthProvider";
+import { toast } from "sonner";
+import React from "react";
 
 export const Route = createFileRoute("/auth")({
   component: Auth,
+  loader: async () => await db.select().from(users),
 });
 
 export default function Auth() {
-  const { toast } = useToast();
-
+  //const { toast } = useToast();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [registerName, setRegisterName] = useState("");
@@ -28,9 +28,66 @@ export default function Auth() {
   const [loginError, setLoginError] = useState("");
   const [registerError, setRegisterError] = useState("");
   const [activeTab, setActiveTab] = useState("login");
+  const { user, setIsLogin, setUser } = useContext(AuthContext);
+
+  const login = async (email: any) => {
+    try {
+      // Find user by email
+      const foundUser = await db.select().from(users).where(eq(users.email, email));
+
+      if (foundUser && foundUser.length > 0) {
+        const userData = foundUser[0];
+
+        setIsLogin(true);
+        setUser(userData);
+        navigate({ to: "/dashboard" });
+        // Persist user in local storage
+        localStorage.setItem("user", JSON.stringify(userData));
+        return userData;
+      } else {
+        toast.error("Login Failed", {
+          description: "No account found with this email",
+          duration: 3000,
+          position: "top-right",
+        });
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  };
+
+  const register = async (email: any, name: any) => {
+    try {
+      // Insert user data
+      const newUser = await db.insert(users).values({
+        email: email,
+        name: name,
+      });
+      const foundUser = await db.select().from(users).where(eq(users.email, email));
+
+      console.log("User inserted successfully");
+      // Add login/redirect logic here
+      if (newUser) {
+        const userData = foundUser[0];
+        setIsLogin(true);
+        setUser(userData);
+
+        navigate({ to: "/dashboard" });
+        // Persist user in local storage
+        localStorage.setItem("user", JSON.stringify(userData));
+        return userData;
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  };
 
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,19 +96,19 @@ export default function Auth() {
     } else {
       setLoginError("");
       try {
-        // Find user by email
-        const [user] = await db.select().from(users).where(eq(users.email, loginEmail));
-
-        if (!user) {
-          console.error("User not found");
-          return;
-        }
+        await login(loginEmail);
+        toast.success("Login Successful", {
+          description: `Welcome back, ${user?.name || "User"}!`,
+          duration: 3000,
+          position: "top-right",
+          icon: "👋",
+        });
       } catch (error) {
         console.error("Login error:", error);
       }
-      navigate({ to: "/dashboard" });
     }
   };
+
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -61,21 +118,17 @@ export default function Auth() {
       setRegisterError("");
 
       try {
-        // Insert user data
-        await db.insert(users).values({
-          email: registerEmail,
-          name: registerName,
-        });
-
-        console.log("User inserted successfully");
+        await register(registerEmail, registerName);
         // Add login/redirect logic here
       } catch (error) {
         console.error("Registration error:", error);
       }
-      navigate({ to: "/dashboard" });
-      toast({
-        title: "User created",
-        description: "You have successfully created an account",
+
+      toast.success("Login Successful", {
+        description: `Welcome back, ${setUser.name || "User"}!`,
+        duration: 3000,
+        position: "top-right",
+        icon: "👋",
       });
     }
   };

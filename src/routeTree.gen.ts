@@ -14,12 +14,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TrainingImport } from './routes/training'
-import { Route as LoginImport } from './routes/login'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as AuthImport } from './routes/auth'
 import { Route as ModuleIndexImport } from './routes/module/index'
 import { Route as ModuleModuleIdIndexImport } from './routes/module/$moduleId/index'
-import { Route as ModuleModuleIdQuizModuleIdImport } from './routes/module/$moduleId/$quizModuleId'
+import { Route as ModuleModuleIdTraningIdIndexImport } from './routes/module/$moduleId/$traningId/index'
+import { Route as ModuleModuleIdTraningIdQuizModuleIdImport } from './routes/module/$moduleId/$traningId/$quizModuleId'
 
 // Create Virtual Routes
 
@@ -35,11 +35,6 @@ const AboutLazyRoute = AboutLazyImport.update({
 
 const TrainingRoute = TrainingImport.update({
   path: '/training',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LoginRoute = LoginImport.update({
-  path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -68,12 +63,17 @@ const ModuleModuleIdIndexRoute = ModuleModuleIdIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ModuleModuleIdQuizModuleIdRoute = ModuleModuleIdQuizModuleIdImport.update(
-  {
-    path: '/module/$moduleId/$quizModuleId',
+const ModuleModuleIdTraningIdIndexRoute =
+  ModuleModuleIdTraningIdIndexImport.update({
+    path: '/module/$moduleId/$traningId/',
     getParentRoute: () => rootRoute,
-  } as any,
-)
+  } as any)
+
+const ModuleModuleIdTraningIdQuizModuleIdRoute =
+  ModuleModuleIdTraningIdQuizModuleIdImport.update({
+    path: '/module/$moduleId/$traningId/$quizModuleId',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -100,13 +100,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
     '/training': {
       id: '/training'
       path: '/training'
@@ -128,18 +121,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleIndexImport
       parentRoute: typeof rootRoute
     }
-    '/module/$moduleId/$quizModuleId': {
-      id: '/module/$moduleId/$quizModuleId'
-      path: '/module/$moduleId/$quizModuleId'
-      fullPath: '/module/$moduleId/$quizModuleId'
-      preLoaderRoute: typeof ModuleModuleIdQuizModuleIdImport
-      parentRoute: typeof rootRoute
-    }
     '/module/$moduleId/': {
       id: '/module/$moduleId/'
       path: '/module/$moduleId'
       fullPath: '/module/$moduleId'
       preLoaderRoute: typeof ModuleModuleIdIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/module/$moduleId/$traningId/$quizModuleId': {
+      id: '/module/$moduleId/$traningId/$quizModuleId'
+      path: '/module/$moduleId/$traningId/$quizModuleId'
+      fullPath: '/module/$moduleId/$traningId/$quizModuleId'
+      preLoaderRoute: typeof ModuleModuleIdTraningIdQuizModuleIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/module/$moduleId/$traningId/': {
+      id: '/module/$moduleId/$traningId/'
+      path: '/module/$moduleId/$traningId'
+      fullPath: '/module/$moduleId/$traningId'
+      preLoaderRoute: typeof ModuleModuleIdTraningIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -151,24 +151,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module': typeof ModuleIndexRoute
-  '/module/$moduleId/$quizModuleId': typeof ModuleModuleIdQuizModuleIdRoute
   '/module/$moduleId': typeof ModuleModuleIdIndexRoute
+  '/module/$moduleId/$traningId/$quizModuleId': typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  '/module/$moduleId/$traningId': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module': typeof ModuleIndexRoute
-  '/module/$moduleId/$quizModuleId': typeof ModuleModuleIdQuizModuleIdRoute
   '/module/$moduleId': typeof ModuleModuleIdIndexRoute
+  '/module/$moduleId/$traningId/$quizModuleId': typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  '/module/$moduleId/$traningId': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
 export interface FileRoutesById {
@@ -176,12 +176,12 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
   '/training': typeof TrainingRoute
   '/about': typeof AboutLazyRoute
   '/module/': typeof ModuleIndexRoute
-  '/module/$moduleId/$quizModuleId': typeof ModuleModuleIdQuizModuleIdRoute
   '/module/$moduleId/': typeof ModuleModuleIdIndexRoute
+  '/module/$moduleId/$traningId/$quizModuleId': typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  '/module/$moduleId/$traningId/': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -190,34 +190,34 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
-    | '/login'
     | '/training'
     | '/about'
     | '/module'
-    | '/module/$moduleId/$quizModuleId'
     | '/module/$moduleId'
+    | '/module/$moduleId/$traningId/$quizModuleId'
+    | '/module/$moduleId/$traningId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/dashboard'
-    | '/login'
     | '/training'
     | '/about'
     | '/module'
-    | '/module/$moduleId/$quizModuleId'
     | '/module/$moduleId'
+    | '/module/$moduleId/$traningId/$quizModuleId'
+    | '/module/$moduleId/$traningId'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/dashboard'
-    | '/login'
     | '/training'
     | '/about'
     | '/module/'
-    | '/module/$moduleId/$quizModuleId'
     | '/module/$moduleId/'
+    | '/module/$moduleId/$traningId/$quizModuleId'
+    | '/module/$moduleId/$traningId/'
   fileRoutesById: FileRoutesById
 }
 
@@ -225,24 +225,25 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
   TrainingRoute: typeof TrainingRoute
   AboutLazyRoute: typeof AboutLazyRoute
   ModuleIndexRoute: typeof ModuleIndexRoute
-  ModuleModuleIdQuizModuleIdRoute: typeof ModuleModuleIdQuizModuleIdRoute
   ModuleModuleIdIndexRoute: typeof ModuleModuleIdIndexRoute
+  ModuleModuleIdTraningIdQuizModuleIdRoute: typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  ModuleModuleIdTraningIdIndexRoute: typeof ModuleModuleIdTraningIdIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
-  LoginRoute: LoginRoute,
   TrainingRoute: TrainingRoute,
   AboutLazyRoute: AboutLazyRoute,
   ModuleIndexRoute: ModuleIndexRoute,
-  ModuleModuleIdQuizModuleIdRoute: ModuleModuleIdQuizModuleIdRoute,
   ModuleModuleIdIndexRoute: ModuleModuleIdIndexRoute,
+  ModuleModuleIdTraningIdQuizModuleIdRoute:
+    ModuleModuleIdTraningIdQuizModuleIdRoute,
+  ModuleModuleIdTraningIdIndexRoute: ModuleModuleIdTraningIdIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -260,12 +261,12 @@ export const routeTree = rootRoute
         "/",
         "/auth",
         "/dashboard",
-        "/login",
         "/training",
         "/about",
         "/module/",
-        "/module/$moduleId/$quizModuleId",
-        "/module/$moduleId/"
+        "/module/$moduleId/",
+        "/module/$moduleId/$traningId/$quizModuleId",
+        "/module/$moduleId/$traningId/"
       ]
     },
     "/": {
@@ -277,9 +278,6 @@ export const routeTree = rootRoute
     "/dashboard": {
       "filePath": "dashboard.tsx"
     },
-    "/login": {
-      "filePath": "login.tsx"
-    },
     "/training": {
       "filePath": "training.tsx"
     },
@@ -289,11 +287,14 @@ export const routeTree = rootRoute
     "/module/": {
       "filePath": "module/index.tsx"
     },
-    "/module/$moduleId/$quizModuleId": {
-      "filePath": "module/$moduleId/$quizModuleId.tsx"
-    },
     "/module/$moduleId/": {
       "filePath": "module/$moduleId/index.tsx"
+    },
+    "/module/$moduleId/$traningId/$quizModuleId": {
+      "filePath": "module/$moduleId/$traningId/$quizModuleId.tsx"
+    },
+    "/module/$moduleId/$traningId/": {
+      "filePath": "module/$moduleId/$traningId/index.tsx"
     }
   }
 }

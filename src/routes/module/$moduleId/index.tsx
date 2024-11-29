@@ -3,9 +3,99 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import data from "@/trainings.json";
-import { PauseCircle, PlayCircle, Volume2, VolumeX } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { Flame, HardHat, Wrench, Zap } from "lucide-react";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
+
+const modules = [
+  {
+    id: 1,
+    title: "Welding Machine JSA",
+    description: {
+      overview:
+        "A beginner's guide to understanding Job Safety Analysis (JSA) for welding machines, including identifying hazards and safety protocols.",
+      specificInstruction: "Focus on understanding basic safety protocols and how to perform a JSA for welding tasks.",
+      trainingGoals: "Develop foundational knowledge of welding machine safety and the ability to conduct a JSA.",
+    },
+    icon: Flame,
+    recommended: true,
+  },
+  {
+    id: 2,
+    title: "Personal Protective Equipment",
+    description: {
+      overview:
+        "A beginner's guide to understanding Job Safety Analysis (JSA) for welding machines, including identifying hazards and safety protocols.",
+      specificInstruction: "Focus on understanding basic safety protocols and how to perform a JSA for welding tasks.",
+      trainingGoals: "Develop foundational knowledge of welding machine safety and the ability to conduct a JSA.",
+    },
+    icon: HardHat,
+  },
+  {
+    id: 3,
+    title: "Basic Tool Safety",
+    description: {
+      overview:
+        "A beginner's guide to understanding Job Safety Analysis (JSA) for welding machines, including identifying hazards and safety protocols.",
+      specificInstruction: "Focus on understanding basic safety protocols and how to perform a JSA for welding tasks.",
+      trainingGoals: "Develop foundational knowledge of welding machine safety and the ability to conduct a JSA.",
+    },
+    icon: Wrench,
+  },
+  {
+    id: 4,
+    title: "Electrical Safety",
+    description: {
+      overview:
+        "A beginner's guide to understanding Job Safety Analysis (JSA) for welding machines, including identifying hazards and safety protocols.",
+      specificInstruction: "Focus on understanding basic safety protocols and how to perform a JSA for welding tasks.",
+      trainingGoals: "Develop foundational knowledge of welding machine safety and the ability to conduct a JSA.",
+    },
+    icon: Zap,
+  },
+];
+
+const trainings = [
+  {
+    id: 1,
+    title: "Introduction to Welding Machine",
+    description: "Job Safety Analysis for welding machine operations",
+    thumbnail: "https://i.ytimg.com/vi/mJTK5-qLUVw/maxresdefault.jpg",
+    duration: 120,
+    created_at: 1678900000,
+    module_id: 1,
+    module_name: "Welding Machine JSA",
+  },
+  {
+    id: 2,
+    title: "Welding Machine Hazard Controls",
+    description: "Job Safety Analysis for welding machine operations",
+    thumbnail:
+      "https://i.ytimg.com/vi/Kz-GTab2O9s/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBSAmk5rwyyZ5wi9TmHn9otnAD8pQ",
+    duration: 150,
+    created_at: 1678910000,
+    module_id: 1,
+    module_name: "Welding Machine JSA",
+  },
+  {
+    id: 3,
+    title: "Emergency Procedures for Welding",
+    description: "Job Safety Analysis for welding machine operations",
+    thumbnail:
+      "https://i.ytimg.com/vi/jTw3xE7V3Dg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBkJg6_uPyunep_526ax94zTr5f5g",
+    duration: 90,
+    created_at: 1678913600,
+    module_id: 1,
+    module_name: "Welding Machine JSA",
+  },
+];
 
 export const Route = createFileRoute("/module/$moduleId/")({
   component: Module,
@@ -13,52 +103,63 @@ export const Route = createFileRoute("/module/$moduleId/")({
 
 function Module() {
   const { moduleId } = Route.useParams();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [hasReadInstructions, setHasReadInstructions] = useState(false);
-  const [hasListenedAudio, setHasListenedAudio] = useState(false);
-
-  const modules = data.modules;
-  const modulebyId = modules.filter((module) => module.id == moduleId);
-
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const selectedModule = modules.filter((module) => module.id.toString() == moduleId);
+  const trainingByModule = trainings.filter((selectedModule) => selectedModule.module_id.toString() == moduleId);
+  const breadcrumbSegments = [
+    { name: "Dashboard", href: "/dashboard" },
+    { name: "Modules", href: "/module/1" },
+    { name: "Welding Machine", href: "/module/1/1" },
+  ];
+  //console.log(trainingByModule);
+  const filteredTrainings = trainingByModule.filter(
+    (training) =>
+      training.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      training.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="container mx-auto p-4 space-y-6">
-      {modulebyId.map((module) => (
-        <h1 key={module.id} className="text-3xl font-bold">
-          {module.title}
-        </h1>
+      {selectedModule.map((module) => (
+        <div key={module.id}>
+          <Breadcrumb segments={breadcrumbSegments} className="mb-6">
+            <BreadcrumbList>
+              {/* Home link */}
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbSeparator />
+
+              {/* Trainings link */}
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/module">Modules</BreadcrumbLink>
+              </BreadcrumbItem>
+
+              <BreadcrumbSeparator />
+
+              {/* Current page */}
+              <BreadcrumbItem>
+                <BreadcrumbPage>{module.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
+          <h1 className="text-3xl font-bold">{module.title}</h1>
+        </div>
       ))}
-      {modulebyId.map((module) => (
-        <Card key={module.id}>
-          <CardHeader>
-            <CardTitle>Instructions and Safety Measures</CardTitle>
-            <CardDescription>
-              Please read through the written instructions and listen to the audio explanation carefully. Both are
-              crucial for your understanding and safety during the practical training.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ScrollArea className="h-[300px] w-full rounded-md border p-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Instructions and Safety Measures</CardTitle>
+          <CardDescription>
+            Please read through the written instructions and listen to the audio explanation carefully. Both are crucial
+            for your understanding and safety during the practical training.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {selectedModule.map((module) => (
+            <ScrollArea key={module.id} className="h-[300px] w-full rounded-md border p-4">
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">1. Overview</h2>
                 <p>{module.description.overview}</p>
@@ -91,82 +192,55 @@ function Module() {
                 </ul>
               </div>
             </ScrollArea>
+          ))}
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="terms"
-                checked={hasReadInstructions}
-                onCheckedChange={(checked) => setHasReadInstructions(checked as boolean)}
-              />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                I have read and understood the written instructions
-              </label>
-            </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="terms"
+              checked={hasReadInstructions}
+              onCheckedChange={(checked) => setHasReadInstructions(checked as boolean)}
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              I have read and understood the written instructions
+            </label>
+          </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Audio Explanation</CardTitle>
-                <CardDescription>
-                  Listen to the detailed audio instructions for a comprehensive understanding.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <audio ref={audioRef} src="/welding-jsa-instructions.mp3" onEnded={() => setHasListenedAudio(true)} />
-                <div className="flex items-center justify-between">
-                  <Button onClick={togglePlay} variant="outline" className="w-32">
-                    {isPlaying ? (
-                      <>
-                        <PauseCircle className="mr-2 h-4 w-4" />
-                        Pause
-                      </>
-                    ) : (
-                      <>
-                        <PlayCircle className="mr-2 h-4 w-4" />
-                        Play
-                      </>
-                    )}
-                  </Button>
-                  <Button onClick={toggleMute} variant="outline" size="icon">
-                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                  </Button>
+          <div className="container mx-auto px-4 py-8">
+            <h1 className="text-3xl font-bold mb-8 text-center">Training Modules</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTrainings.map((training) => (
+                <div key={training.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                  <img src={training.thumbnail} alt={training.title} className="w-full h-48 object-cover" />
+                  <div className="p-4">
+                    <h2 className="text-xl font-semibold mb-2">{training.title}</h2>
+                    <p className="text-gray-600">{training.description}</p>
+                  </div>
+                  <div className="px-4 py-3 bg-gray-100">
+                    <Button
+                      variant="link"
+                      asChild
+                      className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-300"
+                    >
+                      <Link
+                        to="/module/$moduleId/$traningId"
+                        params={{
+                          moduleId: training.module_name.toString(),
+                          traningId: training.id.toString(),
+                        }}
+                      >
+                        Start Training
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="audio"
-                checked={hasListenedAudio}
-                onCheckedChange={(checked) => setHasListenedAudio(checked as boolean)}
-              />
-              <label
-                htmlFor="audio"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                I have listened to the complete audio explanation
-              </label>
+              ))}
             </div>
-
-            <Button variant="link" asChild>
-              <Link
-                to="/module/$moduleId/$quizModuleId"
-                className={`w-full ${
-                  hasReadInstructions && hasListenedAudio ? "" : "cursor-not-allowed text-gray-400"
-                }`}
-                params={{
-                  moduleId: module.id,
-                  quizModuleId: module.id,
-                }}
-              >
-                Proceed to Practical Training test
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

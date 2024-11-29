@@ -1,9 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AuthContext } from "@/context/AuthProvider";
 import { db, users } from "@/lib/db";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BarChart, Book, Trophy, Users } from "lucide-react";
+import React from "react";
+import { useContext } from "react";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -13,8 +16,9 @@ export const Route = createFileRoute("/dashboard")({
 export default function Dashboard() {
   // Loader will run on page load
   // Take data from loader
+  const { user } = useContext(AuthContext);
   const userData = Route.useLoaderData();
-  console.log(userData);
+  //console.log(user);
   // user the loader data to display data
 
   return (
@@ -22,9 +26,10 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold">Welcome to Your Training Dashboard</h1>
 
       <div>
-        {userData.map((user) => (
+        {/* {userData.map((user) => (
           <div key={user.id}>hello{user.name}</div>
-        ))}
+        ))} */}
+        {user?.name}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
