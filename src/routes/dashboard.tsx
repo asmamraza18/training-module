@@ -1,109 +1,79 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/AuthProvider";
-import { db, users } from "@/lib/db";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { db, moduleProgress, modules, trainingProgress, trainings, users } from "@/lib/db";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { BarChart, Book, Trophy, Users, Flame, HardHat, Wrench, Zap } from "lucide-react";
-import { useContext } from "react";
-
-const moduleProgress = [
-  {
-    id: 1,
-    user_id: 4, // Links to a specific user in the Users table
-    module_id: 1, // Links to the "Getting Started with Programming" module
-    status: "in_progress", // Indicates the user is currently working on this module
-    progress: 50.0, // 50% progress made
-    started_at: 1698304800, // Timestamp for when the module was started
-    completed_at: null, // Not yet completed
-    last_accessed_at: 1698312000, // Timestamp for the last time this module was accessed
-  },
-  {
-    id: 2,
-    user_id: 4,
-    module_id: 2,
-    status: "completed",
-    progress: 100.0,
-    started_at: 1698290400,
-    completed_at: 1698316800,
-    last_accessed_at: 1698316800,
-  },
-];
-
-const modules = [
-  {
-    id: 1,
-    title: "Welding Machine JSA",
-    description: "Job Safety Analysis for welding machine operations",
-    icon: Flame,
-    recommended: true,
-  },
-  {
-    id: 2,
-    title: "Personal Protective Equipment",
-    description: "Proper use and maintenance of PPE",
-    icon: HardHat,
-  },
-  {
-    id: 3,
-    title: "Basic Tool Safety",
-    description: "Safe handling of common workshop tools",
-    icon: Wrench,
-  },
-  {
-    id: 4,
-    title: "Electrical Safety",
-    description: "Fundamentals of electrical safety in the workplace",
-    icon: Zap,
-  },
-];
+import { useContext, useState } from "react";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
-  loader: async () => await db.select().from(users),
+  loader: async () => {
+    const moduleData = await db.select().from(modules);
+    const moduleProgressData = await db.select().from(moduleProgress);
+    const trainingProgressData = await db.select().from(trainingProgress);
+    const trainingData = await db.select().from(trainings);
+    const userData = await db.select().from(users);
+
+    return {
+      modules: moduleData,
+      moduleProgress: moduleProgressData,
+      trainingProgress: trainingProgressData,
+      trainings: trainingData,
+      users: userData,
+    }; // Combine both results
+  },
 });
 
 export default function Dashboard() {
-  // Loader will run on page load
   // Take data from loader
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { modules, moduleProgress, trainingProgress, trainings, users } = Route.useLoaderData();
+
+  // Assuming userById is an array, and you want the first matching user
+  const userByIdData = users.find((userid) => userid.id === user.id);
+  // Calculate percentage
+  const percentageScore = userByIdData ? (userByIdData.quizResult / 15) * 100 : 0;
+
   //array progress By userId
-  const moduleByUserId = moduleProgress.filter((progress) => progress.user_id == user.id);
+  const moduleByUserId = moduleProgress.filter((progress) => progress.userId == user.id);
+  const trainingByUserId = trainingProgress.filter((progress) => progress.userId == user.id);
   //total learning module
   const totalModules = moduleByUserId.length;
   //total completed module
   const completeModule = moduleByUserId.filter((completed) => completed.status == "completed").length;
-  //array user's module
-  const learningModules = modules.filter((module) =>
-    moduleByUserId.some((progress) => progress.module_id === module.id)
-  );
-
-  // Map modules to include progress from moduleProgress
-  const modulesWithProgress = modules.map((module) => {
-    const progressEntry = moduleByUserId.find((progress) => progress.module_id === module.id);
+  const percentageModule = (completeModule / modules.length) * 100;
+  //declace data module
+  const dataModules = modules.map((module) => {
+    const description = JSON.parse(module.description); // Parse the JSON description
+    const title = JSON.parse(module.title);
     return {
-      ...module,
-      progress: progressEntry ? progressEntry.progress : 0, // Default to 0 if no entry
+      id: module.id,
+      title: module.title,
+      topic: title.topic,
+      subTopic: title.subTopic,
+      overview: description.overview, // Extract the overview
+      specificInstruction: description.specificInstruction,
+      trainingGoals: description.trainingGoals,
+      icon: module.icon,
+      recommended: module.recommended,
     };
   });
-
+  //array user's module
+  const learningModules = dataModules.filter((module) =>
+    moduleByUserId.some((progress) => progress.moduleId == module.id)
+  );
+  console.log(learningModules);
   // Calculate overall progress
-  const overallProgress = modulesWithProgress.reduce((total, module) => total + module.progress, 0) / modules.length;
-
-  const userData = Route.useLoaderData();
-  //console.log(moduleByUserId);
-  // user the loader data to display data
+  const totalUserProgress = trainingByUserId.reduce((total, training) => total + training.progress, 0);
+  const overallProgress = (totalUserProgress / (trainings.length * 100)) * 100;
 
   return (
     <div className="container mx-auto p-4 space-y-6">
       <h1 className="text-3xl font-bold">Welcome to Your Training Dashboard</h1>
-
-      <div>
-        {/* {userData.map((user) => (
-          <div key={user.id}>hello{user.name}</div>
-        ))} */}
-        {user?.name}
-      </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -152,22 +122,56 @@ export default function Dashboard() {
           <TabsTrigger value="resources">Resources</TabsTrigger>
         </TabsList>
         <TabsContent value="modules" className="space-y-4">
-          <h2 className="text-2xl font-bold">Your Learning Modules</h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {learningModules.map((module) => (
-              <Card key={module.id}>
-                <CardHeader>
-                  <CardTitle>{module.title}</CardTitle>
-                  <CardDescription>{module.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Link to={`/module/${module.id}`} className="text-primary hover:underline">
-                    Continue Learning
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {learningModules.length === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="100"
+                height="100"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                className="mb-4 text-primary"
+              >
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+              <h2 className="text-2xl font-bold mb-2">Start Your Learning Journey</h2>
+              <p className="text-muted-foreground mb-4">It looks like you haven't started any learning modules yet.</p>
+              <Button
+                onClick={() => {
+                  navigate({ to: "/module" });
+                }}
+              >
+                Explore Modules
+              </Button>
+            </div>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold">Your Learning Modules</h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {learningModules.map((module) => {
+                  // Find the corresponding progress for this module
+                  const moduleProgressItem = moduleByUserId.find((progress) => progress.moduleId === module.id);
+                  return (
+                    <Card key={module.id}>
+                      <CardHeader>
+                        <CardTitle className="flex text-lg items-center gap-2">{module.topic}</CardTitle>
+                        <CardTitle className="mb-2">{module.subTopic}</CardTitle>
+                        <CardDescription>{module.overview}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Link to={`/module/${module.id}`} className="text-primary hover:underline">
+                          {moduleProgressItem?.status === "completed" ? "Completed" : "Continue Learning"}
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </TabsContent>
         <TabsContent value="performance" className="space-y-4">
           <h2 className="text-2xl font-bold">Your Performance</h2>
@@ -179,14 +183,14 @@ export default function Dashboard() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Module Completion Rate</span>
-                  <span className="font-bold">75%</span>
+                  <span className="font-bold">{percentageModule}%</span>
                 </div>
-                <Progress value={75} />
+                <Progress value={percentageModule} />
                 <div className="flex justify-between">
                   <span>Average Quiz Score</span>
-                  <span className="font-bold">82%</span>
+                  <span className="font-bold">{percentageScore}%</span>
                 </div>
-                <Progress value={82} />
+                <Progress value={percentageScore} />
                 <div className="flex justify-between">
                   <span>Engagement Score</span>
                   <span className="font-bold">90%</span>
@@ -207,17 +211,12 @@ export default function Dashboard() {
               <CardContent>
                 <ul className="list-disc list-inside space-y-2">
                   <li>
-                    <Link href="/resources/handbook" className="text-primary hover:underline">
+                    <Link to="/trainingHandbook" className="text-primary hover:underline">
                       Training Handbook
                     </Link>
                   </li>
                   <li>
-                    <Link href="/resources/glossary" className="text-primary hover:underline">
-                      Glossary of Terms
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/resources/faq" className="text-primary hover:underline">
+                    <Link to="/faq" className="text-primary hover:underline">
                       Frequently Asked Questions
                     </Link>
                   </li>
@@ -232,17 +231,12 @@ export default function Dashboard() {
               <CardContent>
                 <ul className="list-disc list-inside space-y-2">
                   <li>
-                    <Link href="/program/overview" className="text-primary hover:underline">
+                    <Link to="/programOverview" className="text-primary hover:underline">
                       Program Overview
                     </Link>
                   </li>
                   <li>
-                    <Link href="/program/schedule" className="text-primary hover:underline">
-                      Training Schedule
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/program/objectives" className="text-primary hover:underline">
+                    <Link to="/learningObjective" className="text-primary hover:underline">
                       Learning Objectives
                     </Link>
                   </li>

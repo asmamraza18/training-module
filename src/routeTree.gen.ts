@@ -13,13 +13,17 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as TrainingHandbookImport } from './routes/trainingHandbook'
 import { Route as TrainingImport } from './routes/training'
+import { Route as ProgramOverviewImport } from './routes/programOverview'
+import { Route as LearningObjectiveImport } from './routes/learningObjective'
+import { Route as FaqImport } from './routes/faq'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as AuthImport } from './routes/auth'
 import { Route as ModuleIndexImport } from './routes/module/index'
 import { Route as ModuleModuleIdIndexImport } from './routes/module/$moduleId/index'
 import { Route as ModuleModuleIdTraningIdIndexImport } from './routes/module/$moduleId/$traningId/index'
-import { Route as ModuleModuleIdTraningIdQuizModuleIdImport } from './routes/module/$moduleId/$traningId/$quizModuleId'
+import { Route as ModuleModuleIdTraningIdQuizImport } from './routes/module/$moduleId/$traningId/quiz'
 
 // Create Virtual Routes
 
@@ -33,8 +37,28 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
+const TrainingHandbookRoute = TrainingHandbookImport.update({
+  path: '/trainingHandbook',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const TrainingRoute = TrainingImport.update({
   path: '/training',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProgramOverviewRoute = ProgramOverviewImport.update({
+  path: '/programOverview',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LearningObjectiveRoute = LearningObjectiveImport.update({
+  path: '/learningObjective',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FaqRoute = FaqImport.update({
+  path: '/faq',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -69,9 +93,9 @@ const ModuleModuleIdTraningIdIndexRoute =
     getParentRoute: () => rootRoute,
   } as any)
 
-const ModuleModuleIdTraningIdQuizModuleIdRoute =
-  ModuleModuleIdTraningIdQuizModuleIdImport.update({
-    path: '/module/$moduleId/$traningId/$quizModuleId',
+const ModuleModuleIdTraningIdQuizRoute =
+  ModuleModuleIdTraningIdQuizImport.update({
+    path: '/module/$moduleId/$traningId/quiz',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -100,11 +124,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqImport
+      parentRoute: typeof rootRoute
+    }
+    '/learningObjective': {
+      id: '/learningObjective'
+      path: '/learningObjective'
+      fullPath: '/learningObjective'
+      preLoaderRoute: typeof LearningObjectiveImport
+      parentRoute: typeof rootRoute
+    }
+    '/programOverview': {
+      id: '/programOverview'
+      path: '/programOverview'
+      fullPath: '/programOverview'
+      preLoaderRoute: typeof ProgramOverviewImport
+      parentRoute: typeof rootRoute
+    }
     '/training': {
       id: '/training'
       path: '/training'
       fullPath: '/training'
       preLoaderRoute: typeof TrainingImport
+      parentRoute: typeof rootRoute
+    }
+    '/trainingHandbook': {
+      id: '/trainingHandbook'
+      path: '/trainingHandbook'
+      fullPath: '/trainingHandbook'
+      preLoaderRoute: typeof TrainingHandbookImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -128,11 +180,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleModuleIdIndexImport
       parentRoute: typeof rootRoute
     }
-    '/module/$moduleId/$traningId/$quizModuleId': {
-      id: '/module/$moduleId/$traningId/$quizModuleId'
-      path: '/module/$moduleId/$traningId/$quizModuleId'
-      fullPath: '/module/$moduleId/$traningId/$quizModuleId'
-      preLoaderRoute: typeof ModuleModuleIdTraningIdQuizModuleIdImport
+    '/module/$moduleId/$traningId/quiz': {
+      id: '/module/$moduleId/$traningId/quiz'
+      path: '/module/$moduleId/$traningId/quiz'
+      fullPath: '/module/$moduleId/$traningId/quiz'
+      preLoaderRoute: typeof ModuleModuleIdTraningIdQuizImport
       parentRoute: typeof rootRoute
     }
     '/module/$moduleId/$traningId/': {
@@ -151,11 +203,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
+  '/learningObjective': typeof LearningObjectiveRoute
+  '/programOverview': typeof ProgramOverviewRoute
   '/training': typeof TrainingRoute
+  '/trainingHandbook': typeof TrainingHandbookRoute
   '/about': typeof AboutLazyRoute
   '/module': typeof ModuleIndexRoute
   '/module/$moduleId': typeof ModuleModuleIdIndexRoute
-  '/module/$moduleId/$traningId/$quizModuleId': typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  '/module/$moduleId/$traningId/quiz': typeof ModuleModuleIdTraningIdQuizRoute
   '/module/$moduleId/$traningId': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -163,11 +219,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
+  '/learningObjective': typeof LearningObjectiveRoute
+  '/programOverview': typeof ProgramOverviewRoute
   '/training': typeof TrainingRoute
+  '/trainingHandbook': typeof TrainingHandbookRoute
   '/about': typeof AboutLazyRoute
   '/module': typeof ModuleIndexRoute
   '/module/$moduleId': typeof ModuleModuleIdIndexRoute
-  '/module/$moduleId/$traningId/$quizModuleId': typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  '/module/$moduleId/$traningId/quiz': typeof ModuleModuleIdTraningIdQuizRoute
   '/module/$moduleId/$traningId': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -176,11 +236,15 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/faq': typeof FaqRoute
+  '/learningObjective': typeof LearningObjectiveRoute
+  '/programOverview': typeof ProgramOverviewRoute
   '/training': typeof TrainingRoute
+  '/trainingHandbook': typeof TrainingHandbookRoute
   '/about': typeof AboutLazyRoute
   '/module/': typeof ModuleIndexRoute
   '/module/$moduleId/': typeof ModuleModuleIdIndexRoute
-  '/module/$moduleId/$traningId/$quizModuleId': typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  '/module/$moduleId/$traningId/quiz': typeof ModuleModuleIdTraningIdQuizRoute
   '/module/$moduleId/$traningId/': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -190,33 +254,45 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/faq'
+    | '/learningObjective'
+    | '/programOverview'
     | '/training'
+    | '/trainingHandbook'
     | '/about'
     | '/module'
     | '/module/$moduleId'
-    | '/module/$moduleId/$traningId/$quizModuleId'
+    | '/module/$moduleId/$traningId/quiz'
     | '/module/$moduleId/$traningId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/faq'
+    | '/learningObjective'
+    | '/programOverview'
     | '/training'
+    | '/trainingHandbook'
     | '/about'
     | '/module'
     | '/module/$moduleId'
-    | '/module/$moduleId/$traningId/$quizModuleId'
+    | '/module/$moduleId/$traningId/quiz'
     | '/module/$moduleId/$traningId'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/faq'
+    | '/learningObjective'
+    | '/programOverview'
     | '/training'
+    | '/trainingHandbook'
     | '/about'
     | '/module/'
     | '/module/$moduleId/'
-    | '/module/$moduleId/$traningId/$quizModuleId'
+    | '/module/$moduleId/$traningId/quiz'
     | '/module/$moduleId/$traningId/'
   fileRoutesById: FileRoutesById
 }
@@ -225,11 +301,15 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
+  FaqRoute: typeof FaqRoute
+  LearningObjectiveRoute: typeof LearningObjectiveRoute
+  ProgramOverviewRoute: typeof ProgramOverviewRoute
   TrainingRoute: typeof TrainingRoute
+  TrainingHandbookRoute: typeof TrainingHandbookRoute
   AboutLazyRoute: typeof AboutLazyRoute
   ModuleIndexRoute: typeof ModuleIndexRoute
   ModuleModuleIdIndexRoute: typeof ModuleModuleIdIndexRoute
-  ModuleModuleIdTraningIdQuizModuleIdRoute: typeof ModuleModuleIdTraningIdQuizModuleIdRoute
+  ModuleModuleIdTraningIdQuizRoute: typeof ModuleModuleIdTraningIdQuizRoute
   ModuleModuleIdTraningIdIndexRoute: typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -237,12 +317,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
+  FaqRoute: FaqRoute,
+  LearningObjectiveRoute: LearningObjectiveRoute,
+  ProgramOverviewRoute: ProgramOverviewRoute,
   TrainingRoute: TrainingRoute,
+  TrainingHandbookRoute: TrainingHandbookRoute,
   AboutLazyRoute: AboutLazyRoute,
   ModuleIndexRoute: ModuleIndexRoute,
   ModuleModuleIdIndexRoute: ModuleModuleIdIndexRoute,
-  ModuleModuleIdTraningIdQuizModuleIdRoute:
-    ModuleModuleIdTraningIdQuizModuleIdRoute,
+  ModuleModuleIdTraningIdQuizRoute: ModuleModuleIdTraningIdQuizRoute,
   ModuleModuleIdTraningIdIndexRoute: ModuleModuleIdTraningIdIndexRoute,
 }
 
@@ -261,11 +344,15 @@ export const routeTree = rootRoute
         "/",
         "/auth",
         "/dashboard",
+        "/faq",
+        "/learningObjective",
+        "/programOverview",
         "/training",
+        "/trainingHandbook",
         "/about",
         "/module/",
         "/module/$moduleId/",
-        "/module/$moduleId/$traningId/$quizModuleId",
+        "/module/$moduleId/$traningId/quiz",
         "/module/$moduleId/$traningId/"
       ]
     },
@@ -278,8 +365,20 @@ export const routeTree = rootRoute
     "/dashboard": {
       "filePath": "dashboard.tsx"
     },
+    "/faq": {
+      "filePath": "faq.tsx"
+    },
+    "/learningObjective": {
+      "filePath": "learningObjective.tsx"
+    },
+    "/programOverview": {
+      "filePath": "programOverview.tsx"
+    },
     "/training": {
       "filePath": "training.tsx"
+    },
+    "/trainingHandbook": {
+      "filePath": "trainingHandbook.tsx"
     },
     "/about": {
       "filePath": "about.lazy.tsx"
@@ -290,8 +389,8 @@ export const routeTree = rootRoute
     "/module/$moduleId/": {
       "filePath": "module/$moduleId/index.tsx"
     },
-    "/module/$moduleId/$traningId/$quizModuleId": {
-      "filePath": "module/$moduleId/$traningId/$quizModuleId.tsx"
+    "/module/$moduleId/$traningId/quiz": {
+      "filePath": "module/$moduleId/$traningId/quiz.tsx"
     },
     "/module/$moduleId/$traningId/": {
       "filePath": "module/$moduleId/$traningId/index.tsx"
