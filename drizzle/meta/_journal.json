@@ -15,6 +15,41 @@
       "when": 1732082166856,
       "tag": "0001_bored_warhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1733105899886,
+      "tag": "0002_dark_reaper",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1733110890480,
+      "tag": "0003_cultured_norman_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1733111961123,
+      "tag": "0004_needy_titanium_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1733215361169,
+      "tag": "0005_shiny_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1733301624605,
+      "tag": "0006_certain_ulik",
+      "breakpoints": true
     }
   ]
 }

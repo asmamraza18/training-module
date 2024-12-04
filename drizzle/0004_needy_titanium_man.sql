@@ -1,0 +1,1 @@
+ALTER TABLE `modules` DROP COLUMN `training_id`;

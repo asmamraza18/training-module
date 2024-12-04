@@ -1,6 +1,6 @@
 
 import { eq } from "drizzle-orm";
-import db, { profiles } from "./lib/db";
+import db, { profiles , modules} from "./lib/db";
 
 const result = await db.select({
     userId : profiles.id
