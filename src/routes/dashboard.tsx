@@ -183,12 +183,12 @@ export default function Dashboard() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Module Completion Rate</span>
-                  <span className="font-bold">{percentageModule}%</span>
+                  <span className="font-bold">{percentageModule.toFixed()}%</span>
                 </div>
                 <Progress value={percentageModule} />
                 <div className="flex justify-between">
                   <span>Average Quiz Score</span>
-                  <span className="font-bold">{percentageScore}%</span>
+                  <span className="font-bold">{percentageScore.toFixed()}%</span>
                 </div>
                 <Progress value={percentageScore} />
                 <div className="flex justify-between">

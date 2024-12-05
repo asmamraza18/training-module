@@ -14,7 +14,6 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as TrainingHandbookImport } from './routes/trainingHandbook'
-import { Route as TrainingImport } from './routes/training'
 import { Route as ProgramOverviewImport } from './routes/programOverview'
 import { Route as LearningObjectiveImport } from './routes/learningObjective'
 import { Route as FaqImport } from './routes/faq'
@@ -39,11 +38,6 @@ const AboutLazyRoute = AboutLazyImport.update({
 
 const TrainingHandbookRoute = TrainingHandbookImport.update({
   path: '/trainingHandbook',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const TrainingRoute = TrainingImport.update({
-  path: '/training',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -145,13 +139,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramOverviewImport
       parentRoute: typeof rootRoute
     }
-    '/training': {
-      id: '/training'
-      path: '/training'
-      fullPath: '/training'
-      preLoaderRoute: typeof TrainingImport
-      parentRoute: typeof rootRoute
-    }
     '/trainingHandbook': {
       id: '/trainingHandbook'
       path: '/trainingHandbook'
@@ -206,7 +193,6 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/learningObjective': typeof LearningObjectiveRoute
   '/programOverview': typeof ProgramOverviewRoute
-  '/training': typeof TrainingRoute
   '/trainingHandbook': typeof TrainingHandbookRoute
   '/about': typeof AboutLazyRoute
   '/module': typeof ModuleIndexRoute
@@ -222,7 +208,6 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/learningObjective': typeof LearningObjectiveRoute
   '/programOverview': typeof ProgramOverviewRoute
-  '/training': typeof TrainingRoute
   '/trainingHandbook': typeof TrainingHandbookRoute
   '/about': typeof AboutLazyRoute
   '/module': typeof ModuleIndexRoute
@@ -239,7 +224,6 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/learningObjective': typeof LearningObjectiveRoute
   '/programOverview': typeof ProgramOverviewRoute
-  '/training': typeof TrainingRoute
   '/trainingHandbook': typeof TrainingHandbookRoute
   '/about': typeof AboutLazyRoute
   '/module/': typeof ModuleIndexRoute
@@ -257,7 +241,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/learningObjective'
     | '/programOverview'
-    | '/training'
     | '/trainingHandbook'
     | '/about'
     | '/module'
@@ -272,7 +255,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/learningObjective'
     | '/programOverview'
-    | '/training'
     | '/trainingHandbook'
     | '/about'
     | '/module'
@@ -287,7 +269,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/learningObjective'
     | '/programOverview'
-    | '/training'
     | '/trainingHandbook'
     | '/about'
     | '/module/'
@@ -304,7 +285,6 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   LearningObjectiveRoute: typeof LearningObjectiveRoute
   ProgramOverviewRoute: typeof ProgramOverviewRoute
-  TrainingRoute: typeof TrainingRoute
   TrainingHandbookRoute: typeof TrainingHandbookRoute
   AboutLazyRoute: typeof AboutLazyRoute
   ModuleIndexRoute: typeof ModuleIndexRoute
@@ -320,7 +300,6 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   LearningObjectiveRoute: LearningObjectiveRoute,
   ProgramOverviewRoute: ProgramOverviewRoute,
-  TrainingRoute: TrainingRoute,
   TrainingHandbookRoute: TrainingHandbookRoute,
   AboutLazyRoute: AboutLazyRoute,
   ModuleIndexRoute: ModuleIndexRoute,
@@ -347,7 +326,6 @@ export const routeTree = rootRoute
         "/faq",
         "/learningObjective",
         "/programOverview",
-        "/training",
         "/trainingHandbook",
         "/about",
         "/module/",
@@ -373,9 +351,6 @@ export const routeTree = rootRoute
     },
     "/programOverview": {
       "filePath": "programOverview.tsx"
-    },
-    "/training": {
-      "filePath": "training.tsx"
     },
     "/trainingHandbook": {
       "filePath": "trainingHandbook.tsx"

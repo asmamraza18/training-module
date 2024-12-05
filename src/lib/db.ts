@@ -4,7 +4,7 @@ import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 export const db = drizzle({
   connection: {
     url: "libsql://trainingmodule-asmamraza18.turso.io",
-    authToken : "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzE5Mzk0MjYsImlkIjoiNWI1ZjhmMGItZmI4Ny00YzRkLWIzMzktZmZiYmQ3M2Q2MmY0In0.Guy2vnbFHA1FqjJ7YNV1_5MyRwH7QSyXydSJ6mNr2JGv_YlwTZZP-diFwcTXgKQd7V6iNTWJNivVpKXXR36DDA"
+    authToken : "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzMxMTAzNDIsImlkIjoiNWI1ZjhmMGItZmI4Ny00YzRkLWIzMzktZmZiYmQ3M2Q2MmY0In0.VvmlXm2kqBWpW_Kr_ZGpMSqmcfUBItbLoEOzqRH1riwhuQKplW8NFl2nhOrBhvzLJzQLBwiAebF-TvVoWPbFAQ"
   },
 });
 
@@ -21,17 +21,7 @@ export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text("email").notNull().unique(),
   name: text("name").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .$default(() => new Date()),
-});
-
-// Training courses table
-export const trainings = sqliteTable("trainings", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  title: text("title").notNull(),
-  description: text("description"),
-  duration: integer("duration"), // in minutes
+  quizResult: real("quiz_result").notNull().default(0),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$default(() => new Date()),
@@ -39,15 +29,26 @@ export const trainings = sqliteTable("trainings", {
 
 // Modules table
 export const modules = sqliteTable("modules", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  trainingId: integer("training_id")
+  id: integer("id").primaryKey({ autoIncrement: true }), // Auto-incrementing primary key
+  title: text("title").notNull(), // Module title
+  description: text("description").notNull(), // Store JSON data as text
+  icon: text("icon"), // Assuming the icon is a string reference (e.g., a name or path)
+  recommended: text("recommended").notNull(), // Boolean flag with a default value
+});
+
+// Training courses table
+export const trainings = sqliteTable("trainings", {
+  id: integer("id").primaryKey({ autoIncrement: true }), // Auto-incrementing primary key
+  title: text("title").notNull(), // Title of the training
+  description: text("description"), // Optional description
+  thumbnail: text("thumbnail"), 
+  additionalInfo: text("additional_info"), 
+  imageInfo: text("image_info"), 
+  order: integer("order").notNull(), // Order of the training
+  duration: integer("duration"), // Optional duration in minutes
+  moduleId: integer("module_id")
     .notNull()
-    .references(() => trainings.id, {onDelete: 'cascade'}),
-  title: text("title").notNull(),
-  description: text("description"),
-  order: integer("order").notNull(), // sequence within the training
-  duration: integer("duration"), // in minutes
-  content: text("content"), // could store JSON or markdown content
+    .references(() => modules.id), // Foreign key to modules table
 });
 
 // User progress on modules
@@ -86,6 +87,15 @@ export const trainingProgress = sqliteTable("training_progress", {
   lastAccessedAt: integer("last_accessed_at", { mode: "timestamp" }),
 });
 
+export const quiz = sqliteTable("quiz", {
+  id: integer("id").primaryKey({ autoIncrement: true }), // Auto-incrementing primary key
+  trainingId: integer("training_id")
+    .notNull()
+    .references(() => trainings.id), // Foreign key to trainings table
+  question: text("question").notNull(), // The quiz question
+  options: text("options").notNull(), // Store the options as a JSON string
+  correctAnswer: integer("correct_answer").notNull(), // Index of the correct option
+});
 
 
 // Relations
