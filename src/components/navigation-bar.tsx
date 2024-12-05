@@ -66,7 +66,7 @@ export default function NavigationBar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <span className="px-4 py-2 text-sm text-gray-600">Welcome, {user?.name || "User"}</span>
+              <span className="px-4 py-2 text-sm text-accent">Welcome, {user?.name || "User"}</span>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <button onClick={logout} className={navigationMenuTriggerStyle()}>
