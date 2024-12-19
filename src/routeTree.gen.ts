@@ -22,6 +22,7 @@ import { Route as AuthImport } from './routes/auth'
 import { Route as ModuleIndexImport } from './routes/module/index'
 import { Route as ModuleModuleIdIndexImport } from './routes/module/$moduleId/index'
 import { Route as ModuleModuleIdTraningIdIndexImport } from './routes/module/$moduleId/$traningId/index'
+import { Route as ModuleModuleIdTraningIdTableQuizImport } from './routes/module/$moduleId/$traningId/tableQuiz'
 import { Route as ModuleModuleIdTraningIdQuizImport } from './routes/module/$moduleId/$traningId/quiz'
 
 // Create Virtual Routes
@@ -84,6 +85,12 @@ const ModuleModuleIdIndexRoute = ModuleModuleIdIndexImport.update({
 const ModuleModuleIdTraningIdIndexRoute =
   ModuleModuleIdTraningIdIndexImport.update({
     path: '/module/$moduleId/$traningId/',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const ModuleModuleIdTraningIdTableQuizRoute =
+  ModuleModuleIdTraningIdTableQuizImport.update({
+    path: '/module/$moduleId/$traningId/tableQuiz',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -174,6 +181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleModuleIdTraningIdQuizImport
       parentRoute: typeof rootRoute
     }
+    '/module/$moduleId/$traningId/tableQuiz': {
+      id: '/module/$moduleId/$traningId/tableQuiz'
+      path: '/module/$moduleId/$traningId/tableQuiz'
+      fullPath: '/module/$moduleId/$traningId/tableQuiz'
+      preLoaderRoute: typeof ModuleModuleIdTraningIdTableQuizImport
+      parentRoute: typeof rootRoute
+    }
     '/module/$moduleId/$traningId/': {
       id: '/module/$moduleId/$traningId/'
       path: '/module/$moduleId/$traningId'
@@ -198,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/module': typeof ModuleIndexRoute
   '/module/$moduleId': typeof ModuleModuleIdIndexRoute
   '/module/$moduleId/$traningId/quiz': typeof ModuleModuleIdTraningIdQuizRoute
+  '/module/$moduleId/$traningId/tableQuiz': typeof ModuleModuleIdTraningIdTableQuizRoute
   '/module/$moduleId/$traningId': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -213,6 +228,7 @@ export interface FileRoutesByTo {
   '/module': typeof ModuleIndexRoute
   '/module/$moduleId': typeof ModuleModuleIdIndexRoute
   '/module/$moduleId/$traningId/quiz': typeof ModuleModuleIdTraningIdQuizRoute
+  '/module/$moduleId/$traningId/tableQuiz': typeof ModuleModuleIdTraningIdTableQuizRoute
   '/module/$moduleId/$traningId': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -229,6 +245,7 @@ export interface FileRoutesById {
   '/module/': typeof ModuleIndexRoute
   '/module/$moduleId/': typeof ModuleModuleIdIndexRoute
   '/module/$moduleId/$traningId/quiz': typeof ModuleModuleIdTraningIdQuizRoute
+  '/module/$moduleId/$traningId/tableQuiz': typeof ModuleModuleIdTraningIdTableQuizRoute
   '/module/$moduleId/$traningId/': typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -246,6 +263,7 @@ export interface FileRouteTypes {
     | '/module'
     | '/module/$moduleId'
     | '/module/$moduleId/$traningId/quiz'
+    | '/module/$moduleId/$traningId/tableQuiz'
     | '/module/$moduleId/$traningId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -260,6 +278,7 @@ export interface FileRouteTypes {
     | '/module'
     | '/module/$moduleId'
     | '/module/$moduleId/$traningId/quiz'
+    | '/module/$moduleId/$traningId/tableQuiz'
     | '/module/$moduleId/$traningId'
   id:
     | '__root__'
@@ -274,6 +293,7 @@ export interface FileRouteTypes {
     | '/module/'
     | '/module/$moduleId/'
     | '/module/$moduleId/$traningId/quiz'
+    | '/module/$moduleId/$traningId/tableQuiz'
     | '/module/$moduleId/$traningId/'
   fileRoutesById: FileRoutesById
 }
@@ -290,6 +310,7 @@ export interface RootRouteChildren {
   ModuleIndexRoute: typeof ModuleIndexRoute
   ModuleModuleIdIndexRoute: typeof ModuleModuleIdIndexRoute
   ModuleModuleIdTraningIdQuizRoute: typeof ModuleModuleIdTraningIdQuizRoute
+  ModuleModuleIdTraningIdTableQuizRoute: typeof ModuleModuleIdTraningIdTableQuizRoute
   ModuleModuleIdTraningIdIndexRoute: typeof ModuleModuleIdTraningIdIndexRoute
 }
 
@@ -305,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleIndexRoute: ModuleIndexRoute,
   ModuleModuleIdIndexRoute: ModuleModuleIdIndexRoute,
   ModuleModuleIdTraningIdQuizRoute: ModuleModuleIdTraningIdQuizRoute,
+  ModuleModuleIdTraningIdTableQuizRoute: ModuleModuleIdTraningIdTableQuizRoute,
   ModuleModuleIdTraningIdIndexRoute: ModuleModuleIdTraningIdIndexRoute,
 }
 
@@ -331,6 +353,7 @@ export const routeTree = rootRoute
         "/module/",
         "/module/$moduleId/",
         "/module/$moduleId/$traningId/quiz",
+        "/module/$moduleId/$traningId/tableQuiz",
         "/module/$moduleId/$traningId/"
       ]
     },
@@ -366,6 +389,9 @@ export const routeTree = rootRoute
     },
     "/module/$moduleId/$traningId/quiz": {
       "filePath": "module/$moduleId/$traningId/quiz.tsx"
+    },
+    "/module/$moduleId/$traningId/tableQuiz": {
+      "filePath": "module/$moduleId/$traningId/tableQuiz.tsx"
     },
     "/module/$moduleId/$traningId/": {
       "filePath": "module/$moduleId/$traningId/index.tsx"

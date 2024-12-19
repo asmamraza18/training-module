@@ -1,64 +1,107 @@
-import { useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { cn } from "@/lib/utils";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useContext, useState } from "react";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  closestCorners,
+  useSensor,
+  useSensors,
+  PointerSensor,
+} from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { columns, quizItems } from "@/quiz-data";
+import { QuizItem } from "@/types";
+import { DroppableColumn } from "./-droppableColumn";
+import { BookCheck, Check, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
-import db, { quiz, trainingProgress, moduleProgress, users } from "@/lib/db";
-import { eq, and } from "drizzle-orm";
 import { AuthContext } from "@/context/AuthProvider";
-
-export const Route = createFileRoute("/module/$moduleId/$traningId/quiz")({
-  component: Quiz,
-  loader: async () => await db.select().from(quiz),
+import db, { trainingProgress, moduleProgress, users } from "@/lib/db";
+import { and, eq } from "drizzle-orm";
+export const Route = createFileRoute("/module/$moduleId/$traningId/tableQuiz")({
+  component: TableQuiz,
 });
 
-function Quiz() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [showResults, setShowResults] = useState(false);
-  const { traningId, moduleId } = Route.useParams();
-  const { user } = useContext(AuthContext);
-  const quiz = Route.useLoaderData();
-  const [selectedAnswers, setSelectedAnswers] = useState<number[]>(new Array(quiz.length).fill(-1));
-  const navigate = useNavigate();
-
-  const dataQuiz = quiz.map((question) => {
-    const options = JSON.parse(question.options); // Parse the JSON description
-    return {
-      id: question.id,
-      trainingId: question.trainingId,
-      question: question.question,
-      options: options,
-      correctAnswer: question.correctAnswer,
-    };
+// Shuffle function to randomize items while keeping them in their respective columns
+const shuffleItems = (items: QuizItem[]): QuizItem[] => {
+  // Group items by type
+  const itemsByType: { [key: string]: QuizItem[] } = {};
+  items.forEach((item) => {
+    if (!itemsByType[item.type]) {
+      itemsByType[item.type] = [];
+    }
+    itemsByType[item.type].push(item);
   });
 
-  const handleAnswerSelection = (answerIndex: number) => {
-    const newSelectedAnswers = [...selectedAnswers];
-    newSelectedAnswers[currentQuestion] = answerIndex;
-    setSelectedAnswers(newSelectedAnswers);
+  // Shuffle each group
+  Object.keys(itemsByType).forEach((type) => {
+    itemsByType[type] = itemsByType[type].sort(() => Math.random() - 0.5);
+  });
+
+  // Flatten back into a single array
+  return Object.values(itemsByType).flat();
+};
+
+function TableQuiz() {
+  const { traningId, moduleId } = Route.useParams();
+  const { user } = useContext(AuthContext);
+  const [items, setItems] = useState<QuizItem[]>(() => shuffleItems(quizItems));
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [score, setScore] = useState<number | null>(null);
+  const sensors = useSensors(useSensor(PointerSensor));
+  const navigate = useNavigate();
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestion < quiz.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setShowResults(true);
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+
+      setItems(arrayMove(items, oldIndex, newIndex));
     }
+
+    setActiveId(null);
   };
 
-  const calculateScore = () => {
-    return selectedAnswers.reduce((score, answer, index) => {
-      return score + (answer === quiz[index].correctAnswer ? 1 : 0);
-    }, 0);
+  const checkAnswers = () => {
+    let correctCount = 0;
+    const totalQuestions = items.length;
+
+    // Group items by type
+    const itemsByType: { [key: string]: QuizItem[] } = {};
+    items.forEach((item) => {
+      if (!itemsByType[item.type]) {
+        itemsByType[item.type] = [];
+      }
+      itemsByType[item.type].push(item);
+    });
+
+    // Check each column
+    Object.values(itemsByType).forEach((columnItems) => {
+      // Compare each item's position with its stepNumber
+      columnItems.forEach((item, index) => {
+        // Step numbers are 1-based, index is 0-based
+        if (item.stepNumber === index + 1) {
+          correctCount++;
+        }
+      });
+    });
+
+    const calculatedScore = (correctCount / totalQuestions) * 100;
+    setScore(calculatedScore);
   };
 
   const resetQuiz = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswers(new Array(quiz.length).fill(-1));
-    setShowResults(false);
+    setItems(shuffleItems(quizItems));
+    setScore(null);
   };
 
   const insertResultQuiz = async (id: number, quizResult: number) => {
@@ -193,20 +236,22 @@ function Quiz() {
     }
   };
 
+  const scoreResult = ((score ?? 0) / 100) * 7.5 + user.quizResult;
+
   const handleTrainingProgress = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
       const quizResult = await insertResultQuiz(
         user.id, // first argument: id
-        calculateScore() / 2 // second argument: quizResult
+        scoreResult // second argument: quizResult
       );
       console.log("Quiz Result:", quizResult);
       // Upsert Training Progress
       const trainingProgressResult = await upsertTrainingProgress({
         userId: user.id,
         trainingId: parseInt(traningId),
-        status: "in_progress",
-        progress: 50, // You can adjust this initial progress
+        status: "completed",
+        progress: 100, // You can adjust this initial progress
         lastAccessedAt: new Date(),
       });
       console.log("Training Progress Result:", trainingProgressResult);
@@ -214,26 +259,20 @@ function Quiz() {
       const moduleProgressResult = await upsertModuleProgress({
         userId: user.id,
         moduleId: parseInt(moduleId), // from the current page's module ID
-        status: "in_progress",
-        progress: 50, // You can adjust this initial progress
+        status: "completed",
+        progress: 100, // You can adjust this initial progress
         lastAccessedAt: new Date(),
       });
       console.log("Module Progress Result:", moduleProgressResult);
 
       // Navigate to regular training route
-      toast.success("You half way to go!", {
-        description: "Section A Quiz is Completed",
+      toast.success("Training Completed!", {
+        description: "You completed this training",
         duration: 3000,
         position: "top-right",
         icon: "👏",
       });
-      navigate({
-        to: "/module/$moduleId/$traningId/tableQuiz",
-        params: {
-          moduleId: moduleId,
-          traningId: traningId,
-        },
-      });
+      navigate({ to: "/dashboard" });
     } catch (error) {
       if (error instanceof Error) {
         console.error("Failed to upsert training progress:", error.message);
@@ -243,76 +282,65 @@ function Quiz() {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
-      <Card>
+    <div className="container mx-auto p-4 ">
+      <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle>Welding Operations Safety Quiz</CardTitle>
-          <CardDescription>Test your knowledge after watching the video</CardDescription>
         </CardHeader>
         <CardContent>
-          {!showResults ? (
-            <>
-              <h2 className="text-xl font-semibold mb-4">
-                Question {currentQuestion + 1} of {quiz.length}
-              </h2>
-              <p className="mb-4">{quiz[currentQuestion].question}</p>
-              <RadioGroup
-                value={selectedAnswers[currentQuestion].toString()}
-                onValueChange={(value) => handleAnswerSelection(parseInt(value))}
-              >
-                {dataQuiz[currentQuestion].options.map((option: any, index: any) => (
-                  <div key={index} className="flex items-center space-x-2 mb-2">
-                    <RadioGroupItem value={index.toString()} id={`option-${index}`} />
-                    <Label htmlFor={`option-${index}`}>{option}</Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            </>
-          ) : (
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Quiz Results</h2>
-              <p className="mb-4">
-                You scored {calculateScore()} out of {quiz.length}
-              </p>
-              {dataQuiz.map((question, index) => (
-                <div key={question.id} className="mb-4">
-                  <p
-                    className={cn(
-                      "font-medium",
-                      selectedAnswers[index] === question.correctAnswer ? "text-green-600" : "text-red-600"
-                    )}
-                  >
-                    {index + 1}. {question.question}
-                  </p>
-                  <p>Your answer: {question.options[selectedAnswers[index]]}</p>
-                  <p>Correct answer: {question.options[question.correctAnswer]}</p>
-                </div>
+          <div className="mb-4">
+            <p className="text-muted-foreground">
+              Drag and drop the items within each column to sort them in the correct order based on the step numbers.
+            </p>
+          </div>
+
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="grid grid-cols-4 gap-4">
+              {columns.map((column) => (
+                <DroppableColumn
+                  key={column.id}
+                  id={column.id}
+                  title={column.title}
+                  items={items.filter((item) => item.type === column.id)}
+                />
               ))}
             </div>
-          )}
+
+            <DragOverlay>
+              {activeId ? (
+                <div className="p-4 rounded-lg bg-background shadow-lg border">
+                  {items.find((item) => item.id === activeId)?.content}
+                </div>
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+
+          <div className="mt-6 flex items-center gap-4">
+            <Button onClick={checkAnswers} className="gap-2">
+              <Check className="w-4 h-4" />
+              Check Answers
+            </Button>
+            <Button variant="outline" onClick={resetQuiz} className="gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Reset Quiz
+            </Button>
+            {score !== null && <div className="text-lg font-medium">Score: {score.toFixed(0)}%</div>}
+
+            <Button
+              //disabled={(score || 0) <= 50}
+              onClick={handleTrainingProgress}
+              className="relative gap-2 inset-y-0 right-0"
+            >
+              <BookCheck className="w-4 h-4" />
+              Complete Training
+            </Button>
+          </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          {!showResults ? (
-            <>
-              <Button
-                onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
-                disabled={currentQuestion === 0}
-              >
-                Previous
-              </Button>
-              <Button onClick={handleNextQuestion} disabled={selectedAnswers[currentQuestion] === -1}>
-                {currentQuestion === dataQuiz.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button onClick={resetQuiz}>Retake Quiz</Button>
-              <Button disabled={calculateScore() <= 10} onClick={(e) => handleTrainingProgress(e)}>
-                Continue Section B
-              </Button>
-            </>
-          )}
-        </CardFooter>
       </Card>
     </div>
   );
